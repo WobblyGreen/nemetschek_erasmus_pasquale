@@ -1,12 +1,12 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 
 public class Task3 {
-    public static void main(String[] args){
-        ArrayList<Integer> ar = new ArrayList<>(Arrays.asList(1,3,2,2,5,2,3,7));
-        System.out.println(maximumLhs(getLhsThresholds(ar), ar));
-
+    public int findLHS(int[] nums) {
+        ArrayList<Integer> ar = new ArrayList<>();
+        for(int num : nums)
+            ar.add(num);
+        return maximumLhs(getLhsThresholds(ar), ar);
     }
 
     public static ArrayList<Integer> getLhsThresholds(ArrayList<Integer> nums){
@@ -32,8 +32,8 @@ public class Task3 {
         return thresholds;
     }
 
-    private static ArrayList<Integer> maximumLhs(ArrayList<Integer> lhs, ArrayList<Integer> nums){
-        if(lhs.isEmpty()) return null;
+    private static int maximumLhs(ArrayList<Integer> lhs, ArrayList<Integer> nums){
+        if(lhs.isEmpty()) return 0;
 
         int max=0;
         ArrayList<Integer> maxLHS = null;
@@ -44,24 +44,24 @@ public class Task3 {
             int start = first < second ? first : second;
 
             first = nums.lastIndexOf(lhs.get(i));
-            second = nums.lastIndexOf(lhs.get(i));
+            second = nums.lastIndexOf(lhs.get(i+1));
 
             int end = first > second ? first : second;
 
             ArrayList<Integer> slice = new ArrayList<>(nums.subList(start, end+1));
-            filterArray(slice, first, second);
+            filterArray(slice, lhs.get(i), lhs.get(i+1));
 
             if(slice.size()>max){
                 max=slice.size();
                 maxLHS=slice;
             }
         }
-        return maxLHS;
+        return max;
     }
 
     private static ArrayList<Integer> filterArray(ArrayList<Integer> arraylist, int first, int second){
         for(int i=arraylist.size()-1; i>=0; i--){
-            if(arraylist.get(i)!=first || arraylist.get(i)!=second)
+            if(arraylist.get(i)!=first && arraylist.get(i)!=second)
                 arraylist.remove(i);
         }
         
