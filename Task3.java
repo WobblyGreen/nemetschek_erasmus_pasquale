@@ -9,29 +9,42 @@ public class Task3 {
         return maximumLhs(getLhsThresholds(ar), ar);
     }
 
+    /**
+     * creates an array with pairs of matching integers.
+     * A pair of matching integers is made of initial_num, plus/minus_one_of_initial
+     * @param nums
+     * @return
+     */
     public static ArrayList<Integer> getLhsThresholds(ArrayList<Integer> nums){
         HashSet<Integer> uniqueIntegers = new HashSet<>();
         uniqueIntegers.addAll(nums);
 
-        ArrayList<Integer> thresholds = new ArrayList<>();
+        ArrayList<Integer> pairs = new ArrayList<>();
 
         for(int num : uniqueIntegers){
+            if(pairs.contains(num)) continue;
             if(uniqueIntegers.contains(num+1)){
-                thresholds.add(num);
-                thresholds.add(num+1);
+                pairs.add(num);
+                pairs.add(num+1);
             }
 
             if(uniqueIntegers.contains(num-1)){
-                thresholds.add(num);
-                thresholds.add(num-1);
+                pairs.add(num);
+                pairs.add(num-1);
             }
 
-            //logic to remove num in order to avoid duplicates uniqueIntegers.remove(num);
+            //optimazation todo: logic to remove num in order to avoid duplicates uniqueIntegers.remove(num);
         }
 
-        return thresholds;
+        return pairs;
     }
 
+    /**
+     * finds the longest sequence made only of lhs pairs in nums and returns the length of the sequence
+     * @param lhs
+     * @param nums
+     * @return 
+     */
     private static int maximumLhs(ArrayList<Integer> lhs, ArrayList<Integer> nums){
         if(lhs.isEmpty()) return 0;
 
@@ -59,12 +72,19 @@ public class Task3 {
         return max;
     }
 
-    private static ArrayList<Integer> filterArray(ArrayList<Integer> arraylist, int first, int second){
-        for(int i=arraylist.size()-1; i>=0; i--){
-            if(arraylist.get(i)!=first && arraylist.get(i)!=second)
-                arraylist.remove(i);
+    /**
+     * Removes all numbers that are not equal to first and second from a sequence
+     * @param arraylist
+     * @param first
+     * @param second
+     * @return
+     */
+    private static ArrayList<Integer> filterArray(ArrayList<Integer> unfiltered, int first, int second){
+        for(int i=unfiltered.size()-1; i>=0; i--){
+            if(unfiltered.get(i)!=first && unfiltered.get(i)!=second)
+                unfiltered.remove(i);
         }
         
-        return arraylist;
+        return unfiltered;
     }
 }
