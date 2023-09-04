@@ -45,24 +45,34 @@ public class SimulationLogic {
 		ArrayList<Integer> aliveTurns = new ArrayList<Integer>();
 		ArrayList<Animal> deadAnimals = new ArrayList<Animal>();
 		
-		for(int i=1; !areAllAnimalsDead(); i++) {
+		for(int turn=1; !areAllAnimalsDead(); turn++) {
 			for(Animal animal : this.animals) {
-				if(!animal.isAlive()) {
-					if(!deadAnimals.contains(animal)) {
-						aliveTurns.add(i);
-						deadAnimals.add(animal);
-					}
-					continue;
-				}
 				Food f = Food.values()[(int)((Math.random()*ORDER)%Food.values().length)];
 				animal.feed(f);
+				
+				if(!animal.isAlive()) {
+					if(!deadAnimals.contains(animal)) {
+						aliveTurns.add(turn);
+						deadAnimals.add(animal);
+					}
+				}
 			}
-			System.out.println("Turn No."+ i + "\n"+animals);
-			
 		}
+		
+		System.out.println("\nLifespan statistics");
+		System.out.println("- Minimum lived for " + aliveTurns.get(0) +" turns"+ deadAnimals.get(0));
+		System.out.println("\n- Maximum lived for " + aliveTurns.get(aliveTurns.size()-1) +" turns"+ deadAnimals.get(deadAnimals.size()-1));
+		System.out.println("\n- Average living of " + average(aliveTurns) +" turns");
+		
 		
 	}
 	
+	private int average(ArrayList<Integer> nums) {
+		int sum = 0;
+		for(int n : nums) sum+=n;
+		return sum/nums.size();
+		
+	}
 	private boolean areAllAnimalsDead() {
 		for(Animal a:this.animals) {
 			if(a.isAlive()) return false;

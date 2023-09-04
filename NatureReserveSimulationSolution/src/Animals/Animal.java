@@ -24,11 +24,17 @@ public class Animal {
 	
 	public void feed(Food food) {
 		if(!this.alive) return;
+		
 		if(!this.diet.contains(food)) {
 			this.currentEnergy--;
+			
+			if(this.currentEnergy<=0)
+				this.alive=false;
+			
 			return;
 		}
-		if(this.currentEnergy==this.maxEnergy) return;
+		
+		if(this.currentEnergy>=this.maxEnergy) return;
 		
 		this.currentEnergy++;	
 	};
