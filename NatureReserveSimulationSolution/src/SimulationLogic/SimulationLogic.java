@@ -1,78 +1,91 @@
 package SimulationLogic;
 
 import java.util.ArrayList;
+
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
 
 import Animals.Animal;
 import Food.Food;
 
+import animalSubClasses.*;
+import foodSubClasses.*;
+
 public class SimulationLogic {
 	
 	private ArrayList<Animal> animals;
-	private Food[] foods;
+	private ArrayList<Food> foods;
 	
 	public SimulationLogic() {
+		this.foods = new ArrayList<>(Arrays.asList(new Banana(2), new Califlower(4), new Chicken(3), new Lamb(5)));
 		this.animals=generateAnimals();
-		this.foods = Food.values();
 	}
 	
-	public SimulationLogic(ArrayList<Animal> animals, Food[] foods) {
-		this.animals=animals;
+	public SimulationLogic(ArrayList<Animal> animals, ArrayList<Food> foods) {
 		this.foods = foods;
+		this.animals=animals;
 	}
 	
 	public void simulate() {
 		feedAllAnimals();
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
 	private ArrayList<Animal> generateAnimals(){
 		ArrayList<Animal> animals = new ArrayList<Animal>();
+		System.out.println(this.foods);
+		ArrayList<Food> ZebraFood = new ArrayList<>(Arrays.asList(foods.get(0), foods.get(1)));
 		
-		ArrayList<Food> ZebraFood = new ArrayList<>();
-		ZebraFood.addAll(Arrays.asList(Food.BANANA, Food.CALIFLOWER));
+		ArrayList<Food> LionFood = new ArrayList<>(Arrays.asList(foods.get(2), foods.get(3)));
 		
-		ArrayList<Food> LionFood = new ArrayList<>();
-		LionFood.addAll(Arrays.asList(Food.MEAT, Food.LAMB));
-		
-		animals.add(new Animal("Zebra", 2, ZebraFood));
-		animals.add(new Animal("Lion", 3, LionFood));
+		animals.add(new Zebra("Zebra", 2, ZebraFood));
+		animals.add(new Lion("Lion", 3, LionFood));
 		
 		return animals;
 	}
 	
 	private void feedAllAnimals() {
-		final int ORDER = (int)(Math.pow(10, Math.log10(Food.values().length)));
+		//Constant that stores the 10 power of the length, this value will be used to offset the random between 0 and 1
+		//e.g. if the array's length is 13 the constant is equal to 10
+		final int POWER_OF_10 = (int)(Math.pow(10, (int)(Math.log10(this.foods.size())+1)));
 		
-		ArrayList<Integer> aliveTurns = new ArrayList<Integer>();
-		ArrayList<Animal> deadAnimals = new ArrayList<Animal>();
+		HashMap<Integer, Animal> animalsTurns = new HashMap<>();
 		
 		for(int turn=1; !areAllAnimalsDead(); turn++) {
 			for(Animal animal : this.animals) {
-				Food f = Food.values()[(int)((Math.random()*ORDER)%Food.values().length)];
+				Food f = this.foods.get((int)((Math.random()*POWER_OF_10)%this.foods.size()));
 				animal.feed(f);
 				
 				if(!animal.isAlive()) {
-					if(!deadAnimals.contains(animal)) {
-						aliveTurns.add(turn);
-						deadAnimals.add(animal);
+					if(!animalsTurns.containsValue(animal)) {
+						animalsTurns.put(turn, animal);
 					}
 				}
 			}
 		}
 		
-		System.out.println("\nLifespan statistics");
-		System.out.println("- Minimum lived for " + aliveTurns.get(0) +" turns"+ deadAnimals.get(0));
-		System.out.println("\n- Maximum lived for " + aliveTurns.get(aliveTurns.size()-1) +" turns"+ deadAnimals.get(deadAnimals.size()-1));
-		System.out.println("\n- Average living of " + average(aliveTurns) +" turns");
+		int minTurn = Collections.min(animalsTurns.keySet());
+		int maxTurn = Collections.max(animalsTurns.keySet());
 		
+		System.out.println("\nLifespan statistics");
+		System.out.println("- Minimum lived for " + minTurn +" turns"+ animalsTurns.get(minTurn));
+		System.out.println("\n- Maximum lived for " + maxTurn +" turns"+ animalsTurns.get(maxTurn));
+		System.out.println("\n- Average living of " + average(animalsTurns.keySet()) +" turns");
 		
 	}
 	
-	private int average(ArrayList<Integer> nums) {
+	private int average(Set<Integer> nums) {
 		int sum = 0;
 		for(int n : nums) sum+=n;
 		return sum/nums.size();
 		
 	}
+	
 	private boolean areAllAnimalsDead() {
 		for(Animal a:this.animals) {
 			if(a.isAlive()) return false;

@@ -3,7 +3,7 @@ package Animals;
 import java.util.ArrayList;
 import Food.Food;
 
-public class Animal {
+public abstract class Animal {
 	protected final String animalName;
 	protected boolean alive;
 	
@@ -13,15 +13,18 @@ public class Animal {
 	protected ArrayList<Food> diet;
 
 	public Animal(String animalName, int maxEnergy, ArrayList<Food> diet) {
-		super();
 		this.animalName = animalName;
 		this.maxEnergy = maxEnergy;
 		this.diet = diet;
 		
 		this.currentEnergy = maxEnergy;
-		this.alive = (currentEnergy > 0 ? true : false);
+		this.alive = true;
 	}
 	
+	/**
+	 * Feeds the animal with the passed food
+	 * @param food
+	 */
 	public void feed(Food food) {
 		if(!this.alive) return;
 		
@@ -30,13 +33,10 @@ public class Animal {
 			
 			if(this.currentEnergy<=0)
 				this.alive=false;
-			
-			return;
 		}
 		
-		if(this.currentEnergy>=this.maxEnergy) return;
-		
-		this.currentEnergy++;	
+		else if(this.currentEnergy<this.maxEnergy)
+			this.currentEnergy++;	
 	};
 	
 	public boolean isAlive() {
