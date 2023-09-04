@@ -7,15 +7,24 @@ import Animals.Animal;
 import Food.Food;
 
 public class SimulationLogic {
-
-	public static void main(String[] args) {
-		ArrayList<Animal> animals = createAnimals();
-		System.out.println(animals);
-		
-		feedAllAnimals(animals, 3);
+	
+	private ArrayList<Animal> animals;
+	private Food[] foods;
+	
+	public SimulationLogic() {
+		this.animals=generateAnimals();
+		this.foods = Food.values();
 	}
 	
-	private static ArrayList<Animal> createAnimals(){
+	public SimulationLogic(ArrayList<Animal> animals, Food[] foods) {
+		this.animals=animals;
+		this.foods = foods;
+	}
+	
+	public void simulate() {
+		feedAllAnimals();
+	}
+	private ArrayList<Animal> generateAnimals(){
 		ArrayList<Animal> animals = new ArrayList<Animal>();
 		
 		ArrayList<Food> ZebraFood = new ArrayList<>();
@@ -24,24 +33,41 @@ public class SimulationLogic {
 		ArrayList<Food> LionFood = new ArrayList<>();
 		LionFood.addAll(Arrays.asList(Food.MEAT, Food.LAMB));
 		
-		animals.add(new Animal("Zebra", 10, ZebraFood));
-		animals.add(new Animal("Lion", 7, LionFood));
+		animals.add(new Animal("Zebra", 2, ZebraFood));
+		animals.add(new Animal("Lion", 3, LionFood));
 		
 		return animals;
 	}
 	
-	private static void feedAllAnimals(ArrayList<Animal> animals, int turns) {
+	private void feedAllAnimals() {
 		final int ORDER = (int)(Math.pow(10, Math.log10(Food.values().length)));
 		
-		for(int i=0; ; i++) {
-			for(Animal animal : animals) {
+		ArrayList<Integer> aliveTurns = new ArrayList<Integer>();
+		ArrayList<Animal> deadAnimals = new ArrayList<Animal>();
+		
+		for(int i=1; !areAllAnimalsDead(); i++) {
+			for(Animal animal : this.animals) {
+				if(!animal.isAlive()) {
+					if(!deadAnimals.contains(animal)) {
+						aliveTurns.add(i);
+						deadAnimals.add(animal);
+					}
+					continue;
+				}
 				Food f = Food.values()[(int)((Math.random()*ORDER)%Food.values().length)];
 				animal.feed(f);
 			}
-			System.out.println("Turn No."+(i+1) + "\n"+animals);
+			System.out.println("Turn No."+ i + "\n"+animals);
 			
 		}
 		
+	}
+	
+	private boolean areAllAnimalsDead() {
+		for(Animal a:this.animals) {
+			if(a.isAlive()) return false;
+		}
+		return true;
 	}
 
 }

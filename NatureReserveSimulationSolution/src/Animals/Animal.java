@@ -23,6 +23,7 @@ public class Animal {
 	}
 	
 	public void feed(Food food) {
+		if(!this.alive) return;
 		if(!this.diet.contains(food)) {
 			this.currentEnergy--;
 			return;
@@ -32,6 +33,10 @@ public class Animal {
 		this.currentEnergy++;	
 	};
 	
+	public boolean isAlive() {
+		return alive;
+	}
+
 	@Override
 	public String toString() {
 		String animalInfo = "\n"+this.alive + " " + this.animalName + " " + this.currentEnergy + "/" + this.maxEnergy + "\n" + this.diet;
