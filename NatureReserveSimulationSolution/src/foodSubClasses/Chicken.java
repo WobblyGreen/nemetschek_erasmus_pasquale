@@ -1,11 +1,11 @@
 package foodSubClasses;
 
-import Food.Food;
+import Food.*;
 
 public class Chicken extends Food{
 
 	public Chicken(int energy) {
-		super(energy);
+		super(FoodName.CHICKEN, energy);
 	}
 
 }

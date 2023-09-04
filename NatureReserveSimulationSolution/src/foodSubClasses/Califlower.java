@@ -1,11 +1,11 @@
 package foodSubClasses;
 
-import Food.Food;
+import Food.*;
 
 public class Califlower extends Food{
 
 	public Califlower(int energy) {
-		super(energy);
+		super(FoodName.CALIFLOWER, energy);
 	}
 
 }

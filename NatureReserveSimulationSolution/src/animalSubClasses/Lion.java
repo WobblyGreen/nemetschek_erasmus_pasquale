@@ -2,13 +2,13 @@ package animalSubClasses;
 
 import java.util.ArrayList;
 
-import Animals.Animal;
+import Animals.*;
 import Food.Food;
 
 public class Lion extends Animal {
 
-	public Lion(String animalName, int maxEnergy, ArrayList<Food> diet) {
-		super(animalName, maxEnergy, diet);
+	public Lion(int maxEnergy, ArrayList<Food> diet) {
+		super(AnimalSpecies.LION, maxEnergy, diet);
 	}
 
 }

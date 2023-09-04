@@ -1,9 +1,11 @@
 package Food;
 
 public abstract class Food {
+	protected FoodName foodName;
 	protected int energy;
 	
-	public Food(int energy) {
+	public Food(FoodName foodName, int energy) {
+		this.foodName=foodName;
 		this.energy=energy;
 	}
 
@@ -13,7 +15,7 @@ public abstract class Food {
 	
 	@Override
 	public String toString() {
-		return energy+"";
+		return foodName+" "+energy;
 	}
 	
 }

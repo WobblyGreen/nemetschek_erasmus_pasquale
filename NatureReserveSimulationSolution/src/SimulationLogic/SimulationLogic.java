@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import Animals.Animal;
+import Animals.AnimalSpecies;
 import Food.Food;
 
 import animalSubClasses.*;
@@ -32,33 +33,26 @@ public class SimulationLogic {
 		feedAllAnimals();
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
+
 	private ArrayList<Animal> generateAnimals(){
 		ArrayList<Animal> animals = new ArrayList<Animal>();
-		System.out.println(this.foods);
+		
 		ArrayList<Food> ZebraFood = new ArrayList<>(Arrays.asList(foods.get(0), foods.get(1)));
 		
 		ArrayList<Food> LionFood = new ArrayList<>(Arrays.asList(foods.get(2), foods.get(3)));
 		
-		animals.add(new Zebra("Zebra", 2, ZebraFood));
-		animals.add(new Lion("Lion", 3, LionFood));
+		animals.add(new Zebra(20, ZebraFood));
+		animals.add(new Lion(30, LionFood));
 		
 		return animals;
 	}
 	
 	private void feedAllAnimals() {
-		//Constant that stores the 10 power of the length, this value will be used to offset the random between 0 and 1
-		//e.g. if the array's length is 13 the constant is equal to 10
-		final int POWER_OF_10 = (int)(Math.pow(10, (int)(Math.log10(this.foods.size())+1)));
-		
 		HashMap<Integer, Animal> animalsTurns = new HashMap<>();
 		
 		for(int turn=1; !areAllAnimalsDead(); turn++) {
 			for(Animal animal : this.animals) {
-				Food f = this.foods.get((int)((Math.random()*POWER_OF_10)%this.foods.size()));
+				Food f = this.foods.get((int)(Math.random()*foods.size()));
 				animal.feed(f);
 				
 				if(!animal.isAlive()) {

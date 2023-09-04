@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import Food.Food;
 
 public abstract class Animal {
-	protected final String animalName;
+	protected final AnimalSpecies animal;
 	protected boolean alive;
 	
 	protected final int maxEnergy;
@@ -12,8 +12,8 @@ public abstract class Animal {
 
 	protected ArrayList<Food> diet;
 
-	public Animal(String animalName, int maxEnergy, ArrayList<Food> diet) {
-		this.animalName = animalName;
+	public Animal(AnimalSpecies as, int maxEnergy, ArrayList<Food> diet) {
+		this.animal = as;
 		this.maxEnergy = maxEnergy;
 		this.diet = diet;
 		
@@ -29,14 +29,21 @@ public abstract class Animal {
 		if(!this.alive) return;
 		
 		if(!this.diet.contains(food)) {
-			this.currentEnergy--;
+			this.currentEnergy-=food.getEnergy();
 			
-			if(this.currentEnergy<=0)
+			if(this.currentEnergy<=0) {
 				this.alive=false;
+				this.currentEnergy=0;
+			}
 		}
 		
-		else if(this.currentEnergy<this.maxEnergy)
-			this.currentEnergy++;	
+		else{
+			this.currentEnergy+=food.getEnergy();
+			if(this.currentEnergy>this.maxEnergy)
+				currentEnergy=maxEnergy;
+		}
+		
+			
 	};
 	
 	public boolean isAlive() {
@@ -45,7 +52,7 @@ public abstract class Animal {
 
 	@Override
 	public String toString() {
-		String animalInfo = "\n"+this.alive + " " + this.animalName + " " + this.currentEnergy + "/" + this.maxEnergy + "\n" + this.diet;
+		String animalInfo = "\n"+this.alive + " " + this.animal+ " " + this.currentEnergy + "/" + this.maxEnergy + "\n" + this.diet;
 		return animalInfo;
 	}
 }
