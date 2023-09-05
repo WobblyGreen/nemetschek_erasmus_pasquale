@@ -1,5 +1,5 @@
 package Animals;
 
-public enum AnimalSpecies {
+public enum AnimalSpecies{
 	LION, ZEBRA
 }

@@ -7,43 +7,53 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
-import Animals.Animal;
-import Animals.AnimalSpecies;
-import Food.Food;
-import Food.FoodName;
+import Animals.*;
+import Common.Eatable;
+import Food.*;
 import animalSubClasses.*;
 import foodSubClasses.*;
 
 public class SimulationLogic {
 	
 	private ArrayList<Animal> animals;
-	private ArrayList<Food> foods;
+	private ArrayList<Eatable> testingFood;
 	
 	public SimulationLogic() {
-		this.animals=generateAnimals();
+		this.animals=generateAnimalsIncludingOwnDiets();
+		this.testingFood=generateTestingFood();
 	}
-	
-	public SimulationLogic(ArrayList<Animal> animals, ArrayList<Food> foods) {
-		this.foods = foods;
+
+	public SimulationLogic(ArrayList<Animal> animals) {
 		this.animals=animals;
 	}
 	
 	public void simulate() {
 		feedAllAnimals();
 	}
-	
 
-	private ArrayList<Animal> generateAnimals(){
+	private ArrayList<Animal> generateAnimalsIncludingOwnDiets(){
 		ArrayList<Animal> animals = new ArrayList<Animal>();
 		
-		ArrayList<FoodName> ZebraFood = new ArrayList<>(Arrays.asList(FoodName.BANANA, FoodName.CALIFLOWER));
+		ArrayList<Eatable> ZebraFood = new ArrayList<>(Arrays.asList(new Banana(2), new Califlower(4)));
+		ArrayList<Eatable> LionFood = new ArrayList<>(Arrays.asList(new Lamb(3), new Chicken(5)));
 		
-		ArrayList<FoodName> LionFood = new ArrayList<>(Arrays.asList(FoodName.LAMB, FoodName.CHICKEN));
-		
-		animals.add(new Zebra(20, ZebraFood));
-		animals.add(new Lion(30, LionFood));
+		//animals.add(new Zebra(20, ZebraFood));
+		animals.add(new Lion(10, LionFood));
 		
 		return animals;
+	}
+	
+	private ArrayList<Eatable> generateTestingFood() {
+		ArrayList<Eatable> testingFood = new ArrayList<>();
+		testingFood.addAll(Arrays.asList(new Zebra(1), new Banana(30)));
+		/*
+		for(AnimalSpecies as : AnimalSpecies.values()) {
+			testingFood.add(new Animal(as, (int)(Math.random()*10)));
+		}
+		for(FoodName fn : FoodName.values()) {
+			testingFood.add(new Food(fn, (int)(Math.random()*5)));
+		}*/
+		return testingFood;
 	}
 	
 	private void feedAllAnimals() {
@@ -51,14 +61,14 @@ public class SimulationLogic {
 		
 		for(int turn=1; !areAllAnimalsDead(); turn++) {
 			for(Animal animal : this.animals) {
-				Food f = this.foods.get((int)(Math.random()*foods.size()));
-				animal.feed(f);
+				Eatable e = this.testingFood.get((int)(Math.random()*testingFood.size()));
+				animal.feed(e);
 				
-				if(!animal.isAlive()) {
-					if(!animalsTurns.containsValue(animal)) {
-						animalsTurns.put(turn, animal);
-					}
+				System.out.println(animal);
+				if(!animal.isAlive() && !animalsTurns.containsValue(animal)) {
+					animalsTurns.put(turn, animal);
 				}
+					
 			}
 		}
 		

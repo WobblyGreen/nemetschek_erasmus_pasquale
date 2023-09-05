@@ -1,6 +1,8 @@
 package Food;
 
-public abstract class Food {
+import Common.Eatable;
+
+public class Food implements Eatable{
 	protected FoodName foodName;
 	protected int energy;
 	
@@ -13,8 +15,8 @@ public abstract class Food {
 		return energy;
 	}
 	
-	public FoodName getFoodName() {
-		return this.foodName;
+	public String getName() {
+		return this.foodName+"";
 	}
 	
 	@Override

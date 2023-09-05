@@ -1,36 +1,48 @@
 package Animals;
 
 import java.util.ArrayList;
-import Food.Food;
-import Food.FoodName;
 
-public abstract class Animal {
+import Common.Eatable;
+
+public class Animal implements Eatable{
 	protected final AnimalSpecies animal;
 	protected boolean alive;
 	
 	protected final int maxEnergy;
 	protected int currentEnergy;
 
-	protected ArrayList<FoodName> diet;
+	protected ArrayList<Eatable> diet;
 
-	public Animal(AnimalSpecies as, int maxEnergy, ArrayList<FoodName> diet) {
+	public Animal(AnimalSpecies as, int maxEnergy) {
 		this.animal = as;
 		this.maxEnergy = maxEnergy;
-		this.diet = diet;
+		this.diet = null;
 		
 		this.currentEnergy = maxEnergy;
 		this.alive = true;
 	}
 	
+	public Animal(AnimalSpecies as, int maxEnergy, ArrayList<Eatable> diet) {
+		this(as, maxEnergy);
+		this.diet=diet;
+	}
+	
 	/**
-	 * Feeds the animal with the passed food
+	 * Feeds the animal with the  passed food
 	 * @param food
 	 */
-	public void feed(Food food) {
+	public void feed(Eatable toEat) {
 		if(!this.alive) return;
 		
-		if(!this.diet.contains(food.getFoodName())) {
-			this.currentEnergy-=food.getEnergy();
+		int energyOfAnimalToEat=0;
+		if(toEat instanceof Animal) {
+			Animal eaten = (Animal)toEat;
+			energyOfAnimalToEat=eaten.currentEnergy;
+			eaten.die();
+		}
+
+		if(dietContainsFood(toEat)) {
+			this.currentEnergy-=toEat.getEnergy()-energyOfAnimalToEat;
 			
 			if(this.currentEnergy<=0) {
 				this.alive=false;
@@ -39,15 +51,49 @@ public abstract class Animal {
 		}
 		
 		else{
-			this.currentEnergy+=food.getEnergy();
+			this.currentEnergy+=toEat.getEnergy()+energyOfAnimalToEat;
 			if(this.currentEnergy>this.maxEnergy)
 				currentEnergy=maxEnergy;
 		}
 			
 	};
 	
+	//Eatable methods
+	public String getName() {
+		return animal+"";
+	}
+	
+	public int getEnergy() {
+		return currentEnergy;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Eatable)) return false;
+		Eatable e = (Eatable)obj;
+		
+		return this.getName()==e.getName();
+	}
+	//end
+	
+	private boolean dietContainsFood(Eatable toEat) {
+		for(Eatable e:diet) {
+			if(e.getName()==toEat.getName()) return true;
+		}
+		return false;
+	}
+	
 	public boolean isAlive() {
 		return alive;
+	}
+	
+	private void die() {
+		this.alive=false;
+		this.currentEnergy=0;
+	}
+	
+	public void setEnergy(int energy) {
+		this.currentEnergy=energy;
 	}
 
 	@Override
