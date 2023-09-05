@@ -2,6 +2,7 @@ package Animals;
 
 import java.util.ArrayList;
 import Food.Food;
+import Food.FoodName;
 
 public abstract class Animal {
 	protected final AnimalSpecies animal;
@@ -10,9 +11,9 @@ public abstract class Animal {
 	protected final int maxEnergy;
 	protected int currentEnergy;
 
-	protected ArrayList<Food> diet;
+	protected ArrayList<FoodName> diet;
 
-	public Animal(AnimalSpecies as, int maxEnergy, ArrayList<Food> diet) {
+	public Animal(AnimalSpecies as, int maxEnergy, ArrayList<FoodName> diet) {
 		this.animal = as;
 		this.maxEnergy = maxEnergy;
 		this.diet = diet;
@@ -28,7 +29,7 @@ public abstract class Animal {
 	public void feed(Food food) {
 		if(!this.alive) return;
 		
-		if(!this.diet.contains(food)) {
+		if(!this.diet.contains(food.getFoodName())) {
 			this.currentEnergy-=food.getEnergy();
 			
 			if(this.currentEnergy<=0) {
@@ -42,7 +43,6 @@ public abstract class Animal {
 			if(this.currentEnergy>this.maxEnergy)
 				currentEnergy=maxEnergy;
 		}
-		
 			
 	};
 	

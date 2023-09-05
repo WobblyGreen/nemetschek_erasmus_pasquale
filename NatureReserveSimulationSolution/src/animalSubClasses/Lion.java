@@ -4,11 +4,12 @@ import java.util.ArrayList;
 
 import Animals.*;
 import Food.Food;
+import Food.FoodName;
 
 public class Lion extends Animal {
 
-	public Lion(int maxEnergy, ArrayList<Food> diet) {
-		super(AnimalSpecies.LION, maxEnergy, diet);
+	public Lion(int maxEnergy, ArrayList<FoodName> lionFood) {
+		super(AnimalSpecies.LION, maxEnergy, lionFood);
 	}
 
 }

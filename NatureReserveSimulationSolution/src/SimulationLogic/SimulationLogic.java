@@ -10,7 +10,7 @@ import java.util.Set;
 import Animals.Animal;
 import Animals.AnimalSpecies;
 import Food.Food;
-
+import Food.FoodName;
 import animalSubClasses.*;
 import foodSubClasses.*;
 
@@ -20,7 +20,6 @@ public class SimulationLogic {
 	private ArrayList<Food> foods;
 	
 	public SimulationLogic() {
-		this.foods = new ArrayList<>(Arrays.asList(new Banana(2), new Califlower(4), new Chicken(3), new Lamb(5)));
 		this.animals=generateAnimals();
 	}
 	
@@ -37,9 +36,9 @@ public class SimulationLogic {
 	private ArrayList<Animal> generateAnimals(){
 		ArrayList<Animal> animals = new ArrayList<Animal>();
 		
-		ArrayList<Food> ZebraFood = new ArrayList<>(Arrays.asList(foods.get(0), foods.get(1)));
+		ArrayList<FoodName> ZebraFood = new ArrayList<>(Arrays.asList(FoodName.BANANA, FoodName.CALIFLOWER));
 		
-		ArrayList<Food> LionFood = new ArrayList<>(Arrays.asList(foods.get(2), foods.get(3)));
+		ArrayList<FoodName> LionFood = new ArrayList<>(Arrays.asList(FoodName.LAMB, FoodName.CHICKEN));
 		
 		animals.add(new Zebra(20, ZebraFood));
 		animals.add(new Lion(30, LionFood));

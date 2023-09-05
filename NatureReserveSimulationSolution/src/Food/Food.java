@@ -13,6 +13,10 @@ public abstract class Food {
 		return energy;
 	}
 	
+	public FoodName getFoodName() {
+		return this.foodName;
+	}
+	
 	@Override
 	public String toString() {
 		return foodName+" "+energy;

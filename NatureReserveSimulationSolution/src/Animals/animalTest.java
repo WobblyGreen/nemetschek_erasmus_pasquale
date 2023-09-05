@@ -6,24 +6,51 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import Food.Food;
+import Food.FoodName;
 import animalSubClasses.*;
 import foodSubClasses.*;
 
 class animalTest {
-	
-	@Before
+	@Test
+	void zebraEatsAllowedFoodWhenFull() {
+		ArrayList<FoodName> zebraDiet = new ArrayList<>(Arrays.asList(FoodName.BANANA));
+		Zebra zebra = new Zebra(10, zebraDiet);
+		
+		zebra.feed(new Banana(2));
+		assertEquals(zebra.maxEnergy, zebra.currentEnergy);
+	}
 	
 	@Test
-	void eatAnAllowedFood() {
-		Food allowedFood = new Banana(2);
-		ArrayList<Food> diet = new ArrayList<>(Arrays.asList(allowedFood));
-		Zebra zebra = new Zebra(10, diet);
+	void zebraEatsAllowedFoodWhenEmpty() {
+		ArrayList<FoodName> zebraDiet = new ArrayList<>(Arrays.asList(FoodName.BANANA));
+		Zebra zebra = new Zebra(10, zebraDiet);
 		
-		zebra.feed(allowedFood);
-		assertEquals(zebra.maxEnergy, zebra.currentEnergy);
+		zebra.currentEnergy=1;
+		zebra.feed(new Banana(2));
+		assertEquals(3, zebra.currentEnergy);
+	}
+	
+	@Test
+	void zebraEatsDisallowedFoodWhenFull() {
+		ArrayList<FoodName> zebraDiet = new ArrayList<>(Arrays.asList(FoodName.BANANA));
+		Zebra zebra = new Zebra(10, zebraDiet);
+		
+		zebra.feed(new Lamb(2));
+		assertEquals(8, zebra.currentEnergy);
+	}
+	
+	@Test
+	void zebraEatsDisallowedFoodWhenEmpty() {
+		ArrayList<FoodName> zebraDiet = new ArrayList<>(Arrays.asList(FoodName.BANANA));
+		Zebra zebra = new Zebra(10, zebraDiet);
+		
+		zebra.currentEnergy=1;
+		zebra.feed(new Lamb(2));
+		assertEquals(0, zebra.currentEnergy);
 	}
 
 }
