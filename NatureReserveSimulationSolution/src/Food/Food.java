@@ -5,6 +5,7 @@ import Common.Eatable;
 public class Food implements Eatable{
 	protected FoodName foodName;
 	protected int energy;
+	protected double size;
 	
 	public Food(FoodName foodName, int energy) {
 		this.foodName=foodName;
@@ -22,6 +23,11 @@ public class Food implements Eatable{
 	@Override
 	public String toString() {
 		return foodName+" "+energy;
+	}
+
+	@Override
+	public double getSize() {
+		return size;
 	}
 	
 }

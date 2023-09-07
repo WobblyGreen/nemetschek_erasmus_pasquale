@@ -10,20 +10,25 @@ public class Animal implements Eatable{
 	
 	protected final int maxEnergy;
 	protected int currentEnergy;
+	protected int starvingValue;
 
 	protected ArrayList<Eatable> diet;
+	protected double size;
 
-	public Animal(AnimalSpecies as, int maxEnergy) {
+	public Animal(AnimalSpecies as, int maxEnergy, double size) {
 		this.animal = as;
 		this.maxEnergy = maxEnergy;
 		this.diet = null;
 		
 		this.currentEnergy = maxEnergy;
 		this.alive = true;
+		
+		this.starvingValue=maxEnergy/4;
+		this.size=size;
 	}
 	
-	public Animal(AnimalSpecies as, int maxEnergy, ArrayList<Eatable> diet) {
-		this(as, maxEnergy);
+	public Animal(AnimalSpecies as, int maxEnergy, double size, ArrayList<Eatable> diet) {
+		this(as, maxEnergy, 1);
 		this.diet=diet;
 	}
 	
@@ -41,13 +46,10 @@ public class Animal implements Eatable{
 			eaten.die();
 		}
 
-		if(dietContainsFood(toEat)) {
-			this.currentEnergy-=toEat.getEnergy()-energyOfAnimalToEat;
+		if(!dietContainsFood(toEat)) {
+			this.currentEnergy=-toEat.getEnergy()-energyOfAnimalToEat;
 			
-			if(this.currentEnergy<=0) {
-				this.alive=false;
-				this.currentEnergy=0;
-			}
+			if(this.currentEnergy<=0) die();
 		}
 		
 		else{
@@ -59,6 +61,10 @@ public class Animal implements Eatable{
 	};
 	
 	//Eatable methods
+	public double getSize() {
+		return this.size;
+	}
+	
 	public String getName() {
 		return animal+"";
 	}
@@ -76,6 +82,20 @@ public class Animal implements Eatable{
 	}
 	//end
 	
+	private void die() {
+		this.alive=false;
+		this.currentEnergy=0;
+	}
+	
+	public void grow() {
+		this.size+=(size*Math.random()*((double)currentEnergy/maxEnergy));
+	}
+	
+	public void starve() {
+		this.currentEnergy--;
+		if(currentEnergy<=0) die();
+	}
+	
 	private boolean dietContainsFood(Eatable toEat) {
 		for(Eatable e:diet) {
 			if(e.getName()==toEat.getName()) return true;
@@ -87,9 +107,8 @@ public class Animal implements Eatable{
 		return alive;
 	}
 	
-	private void die() {
-		this.alive=false;
-		this.currentEnergy=0;
+	public boolean isStarving() {
+		return currentEnergy<=starvingValue && alive;
 	}
 	
 	public void setEnergy(int energy) {
@@ -98,7 +117,7 @@ public class Animal implements Eatable{
 
 	@Override
 	public String toString() {
-		String animalInfo = "\n"+this.alive + " " + this.animal+ " " + this.currentEnergy + "/" + this.maxEnergy + "\n" + this.diet;
+		String animalInfo = this.animal+ " " + size +" "+ this.currentEnergy + "/" + this.maxEnergy + "\n" + this.diet;
 		return animalInfo;
 	}
 }
