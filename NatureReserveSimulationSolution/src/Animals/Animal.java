@@ -38,25 +38,21 @@ public class Animal implements Eatable{
 	 */
 	public void feed(Eatable toEat) {
 		if(!this.alive) return;
-		
-		int energyOfAnimalToEat=0;
-		if(toEat instanceof Animal) {
-			Animal eaten = (Animal)toEat;
-			energyOfAnimalToEat=eaten.currentEnergy;
-			eaten.die();
-		}
 
 		if(!dietContainsFood(toEat)) {
-			this.currentEnergy=-toEat.getEnergy()-energyOfAnimalToEat;
+			this.currentEnergy-=toEat.getEnergy();
 			
 			if(this.currentEnergy<=0) die();
 		}
 		
 		else{
-			this.currentEnergy+=toEat.getEnergy()+energyOfAnimalToEat;
+			this.currentEnergy+=toEat.getEnergy();
 			if(this.currentEnergy>this.maxEnergy)
 				currentEnergy=maxEnergy;
 		}
+		
+		if(toEat instanceof Animal) 
+			((Animal)toEat).die();
 			
 	};
 	
@@ -82,6 +78,10 @@ public class Animal implements Eatable{
 	}
 	//end
 	
+	public void addFoodToDiet(Eatable e) {
+		this.diet.add(e);
+	}
+	
 	private void die() {
 		this.alive=false;
 		this.currentEnergy=0;
@@ -96,7 +96,7 @@ public class Animal implements Eatable{
 		if(currentEnergy<=0) die();
 	}
 	
-	private boolean dietContainsFood(Eatable toEat) {
+	public boolean dietContainsFood(Eatable toEat) {
 		for(Eatable e:diet) {
 			if(e.getName()==toEat.getName()) return true;
 		}
@@ -117,7 +117,7 @@ public class Animal implements Eatable{
 
 	@Override
 	public String toString() {
-		String animalInfo = this.animal+ " " + size +" "+ this.currentEnergy + "/" + this.maxEnergy + "\n" + this.diet;
+		String animalInfo = this.animal+ " " + (int)size +" "+ this.currentEnergy + "/" + this.maxEnergy + "\n" + this.diet;
 		return animalInfo;
 	}
 }

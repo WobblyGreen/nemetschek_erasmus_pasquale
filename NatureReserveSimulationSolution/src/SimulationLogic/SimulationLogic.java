@@ -37,7 +37,7 @@ public class SimulationLogic {
 		ArrayList<Eatable> LionFood = new ArrayList<>(Arrays.asList(new Lamb(1), new Chicken(2)));
 		
 		animals.add(new Zebra(8, (int)(Math.random()*10), ZebraFood));
-		animals.add(new Lion(10, (int)(Math.random()*10), LionFood));
+		animals.add(new Lion(12, (int)(Math.random()*10), LionFood));
 		
 		return animals;
 	}
@@ -61,10 +61,14 @@ public class SimulationLogic {
 			for(Animal animal : this.animals) {
 				if(Math.random()>0.5)
 					feedAnAnimal(animal);
+				
 				else if(animal.isStarving())
 					animal.starve();
 				
-				if(turn%3==0 && !animal.isStarving()) animal.grow();
+				if(turn%3==0 && !animal.isStarving()) {
+					animal.grow();
+					
+				}
 				
 				if(!animal.isAlive() && !animalsTurns.containsValue(animal))
 					animalsTurns.put(turn, animal);		
@@ -84,6 +88,21 @@ public class SimulationLogic {
 	private void feedAnAnimal(Animal animal) {
 		Eatable e = this.testingFood.get((int)(Math.random()*testingFood.size()));
 		animal.feed(e);
+	}
+	
+	private void addFoodToDiet(Animal animal) {
+		Eatable e;
+		
+		do {
+			e = testingFood.get((int)(Math.random()*testingFood.size()));
+		} while(e.getName()!=animal.getName());
+		
+		if(e instanceof Food) {
+			animal.addFoodToDiet(new Food(FoodName.valueOf(e.getName()), ));
+		}
+		
+		
+		
 	}
 	
 	private int average(Set<Integer> nums) {

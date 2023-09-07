@@ -12,6 +12,11 @@ public class Food implements Eatable{
 		this.energy=energy;
 	}
 
+	public Food(String name, int energy) {
+		this.foodName=FoodName.valueOf(name);
+		this.energy=energy;
+	}
+
 	public int getEnergy() {
 		return energy;
 	}
