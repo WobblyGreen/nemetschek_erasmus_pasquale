@@ -97,8 +97,12 @@ public class SimulationLogic {
 			e = testingFood.get((int)(Math.random()*testingFood.size()));
 		} while(e.getName()!=animal.getName());
 		
+		int newEnergy=e.getEnergy()+(int)(Math.random()*e.getEnergy());
+		double newSize=e.getSize()+Math.random()*e.getSize();
+		
 		if(e instanceof Food) {
-			animal.addFoodToDiet(new Food(FoodName.valueOf(e.getName()), ));
+			Food f = (Food)e;
+			animal.addFoodToDiet(new Food(FoodName.valueOf(e.getName()), newEnergy));
 		}
 		
 		
