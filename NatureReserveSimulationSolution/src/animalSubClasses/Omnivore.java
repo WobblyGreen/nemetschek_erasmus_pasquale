@@ -3,12 +3,12 @@ package animalSubClasses;
 import java.util.ArrayList;
 
 import Animals.*;
-import Common.Eatable;
-import Common.Food;
+import Interfaces.DietItem;
+import Interfaces.Eatable;
 
 public class Omnivore extends Animal {
 
-	public Omnivore(AnimalSpecies as, int maxEnergy, double size, ArrayList<Food> animalsAndVeggiesToEat) {
+	public Omnivore(AnimalSpecies as, int maxEnergy, double size, ArrayList<DietItem> animalsAndVeggiesToEat) {
 		super(as, maxEnergy, size, animalsAndVeggiesToEat);
 	}
 	

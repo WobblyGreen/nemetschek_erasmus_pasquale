@@ -1,7 +1,7 @@
 package Animals;
 
-import Common.Food;
+import Interfaces.DietItem;
 
-public enum AnimalSpecies implements Food{
+public enum AnimalSpecies implements DietItem{
 	LION, ZEBRA
 }

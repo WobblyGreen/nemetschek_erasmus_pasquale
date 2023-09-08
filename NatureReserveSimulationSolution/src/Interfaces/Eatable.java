@@ -1,4 +1,4 @@
-package Common;
+package Interfaces;
 
 public interface Eatable {
 	public String getName();

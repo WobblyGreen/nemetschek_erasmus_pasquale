@@ -1,19 +1,19 @@
-package Food;
+package NonAnimal;
 
-import Common.Eatable;
+import Interfaces.Eatable;
 
-public abstract class EatableButNotAnimal implements Eatable{
-	protected NonAnimal foodName;
+public class VegeterianFood implements Eatable{
+	protected VegeterianSpecies foodName;
 	protected int energy;
 	protected double size;
 	
-	public EatableButNotAnimal(NonAnimal foodName, int energy) {
+	public VegeterianFood(VegeterianSpecies foodName, int energy) {
 		this.foodName=foodName;
 		this.energy=energy;
 		this.size=1;
 	}
 
-	public EatableButNotAnimal(NonAnimal foodName, int energy, double size) {
+	public VegeterianFood(VegeterianSpecies foodName, int energy, double size) {
 		this(foodName, energy);
 		this.size=size;
 	}

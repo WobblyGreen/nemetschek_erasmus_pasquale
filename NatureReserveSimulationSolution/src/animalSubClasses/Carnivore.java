@@ -3,12 +3,12 @@ package animalSubClasses;
 import java.util.ArrayList;
 
 import Animals.*;
-import Common.Eatable;
-import Common.Food;
+import Interfaces.DietItem;
+import Interfaces.Eatable;
 
 public class Carnivore extends Animal {
 
-	public Carnivore(AnimalSpecies as, int maxEnergy, double size, ArrayList<Food> animalsToEat) {
+	public Carnivore(AnimalSpecies as, int maxEnergy, double size, ArrayList<DietItem> animalsToEat) {
 		super(as, maxEnergy, size, animalsToEat);
 	}
 	

@@ -1,13 +1,14 @@
-package Common;
+package Simulation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import Animals.*;
-import Food.Food;
-import Food.FoodName;
+import Animals.Animal;
+import Animals.AnimalSpecies;
+import Interfaces.DietItem;
+import Interfaces.Eatable;
+import NonAnimal.*;
 import animalSubClasses.*;
-import foodSubClasses.Veggie;
 
 public class Generator {
 	private ArrayList<AnimalSpecies> omnivores;
@@ -29,8 +30,8 @@ public class Generator {
 		return animals;
 	}
 	
-	private Veggie generateVeggie(FoodName fn) {
-		return (new Veggie(fn, (int)getRandom(5), 1));
+	private VegeterianFood generateVegeterian(VegeterianSpecies vs) {
+		return (new VegeterianFood(vs, (int)getRandom(5), 1));
 	}
 	
 	private Animal generateAnimal(AnimalSpecies as) {
@@ -52,17 +53,17 @@ public class Generator {
 			
 	}
 	
-	private ArrayList<Food> generateDiet(AnimalSpecies as){
-		ArrayList<Food> diet = new ArrayList<>();
+	private ArrayList<DietItem> generateDiet(AnimalSpecies as){
+		ArrayList<DietItem> diet = new ArrayList<>();
 		
 		if(carnivores.contains(as)) {
 			diet.addAll(Arrays.asList(getRandomAnimalSpecies(), getRandomAnimalSpecies()));
 		}
 		else if(herbivores.contains(as)) {
-			diet.addAll(Arrays.asList(getRandomVeggie(), getRandomVeggie()));
+			diet.addAll(Arrays.asList(getRandomVegeterianSpecies(), getRandomVegeterianSpecies()));
 		}
 		else if(omnivores.contains(as)) {
-			diet.addAll(Arrays.asList(getRandomVeggie(), getRandomAnimalSpecies()));
+			diet.addAll(Arrays.asList(getRandomVegeterianSpecies(), getRandomAnimalSpecies()));
 		}
 		else {
 			return null;
@@ -77,14 +78,14 @@ public class Generator {
 	
 	public Eatable getRandomFood() {
 		boolean veggieOrAnimal = getRandom(1)>0.5;
-		return (veggieOrAnimal ? generateAnimal(getRandomAnimalSpecies()) : generateVeggie(getRandomVeggie()));
+		return (veggieOrAnimal ? generateAnimal(getRandomAnimalSpecies()) : generateVegeterian(getRandomVegeterianSpecies()));
 	}
 	
 	private AnimalSpecies getRandomAnimalSpecies() {
 		return AnimalSpecies.values()[(int)getRandom(AnimalSpecies.values().length)];
 	}
 	
-	private FoodName getRandomVeggie() {
-		return FoodName.values()[(int)getRandom(FoodName.values().length)];
+	private VegeterianSpecies getRandomVegeterianSpecies() {
+		return VegeterianSpecies.values()[(int)getRandom(VegeterianSpecies.values().length)];
 	}
 }

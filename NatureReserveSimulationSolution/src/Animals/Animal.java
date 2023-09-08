@@ -2,8 +2,8 @@ package Animals;
 
 import java.util.ArrayList;
 
-import Common.Eatable;
-import Common.Food;
+import Interfaces.DietItem;
+import Interfaces.Eatable;
 
 public abstract class Animal implements Eatable{
 	protected final AnimalSpecies animal;
@@ -13,10 +13,10 @@ public abstract class Animal implements Eatable{
 	protected int currentEnergy;
 	protected int starvingValue;
 
-	protected ArrayList<Food> diet;
+	protected ArrayList<DietItem> diet;
 	protected double size;
 
-	public Animal(AnimalSpecies as, int maxEnergy, double size, ArrayList<Food> diet) {
+	public Animal(AnimalSpecies as, int maxEnergy, double size, ArrayList<DietItem> diet) {
 		this.animal = as;
 		this.maxEnergy = maxEnergy;
 		
@@ -84,7 +84,7 @@ public abstract class Animal implements Eatable{
 	}
 	//end
 	
-	public void addFoodToDiet(Food foodName) {
+	public void addFoodToDiet(DietItem foodName) {
 		this.diet.add(foodName);
 	}
 	
@@ -102,8 +102,8 @@ public abstract class Animal implements Eatable{
 		if(currentEnergy<=0) die();
 	}
 	
-	public boolean dietContainsFood(Food toEat) {
-		for(Food e:diet) {
+	public boolean dietContainsFood(DietItem toEat) {
+		for(DietItem e:diet) {
 			if(e.equals(toEat)) return true;
 		}
 		return false;
