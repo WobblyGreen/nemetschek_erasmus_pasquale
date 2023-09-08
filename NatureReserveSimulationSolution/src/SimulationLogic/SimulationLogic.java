@@ -37,7 +37,7 @@ public class SimulationLogic {
 		ArrayList<Eatable> LionFood = new ArrayList<>(Arrays.asList(new Lamb(1), new Chicken(2)));
 		
 		animals.add(new Zebra(8, (int)(Math.random()*10), ZebraFood));
-		animals.add(new Lion(12, (int)(Math.random()*10), LionFood));
+		animals.add(new Carnivore(12, (int)(Math.random()*10), LionFood));
 		
 		return animals;
 	}
@@ -67,6 +67,7 @@ public class SimulationLogic {
 				
 				if(turn%3==0 && !animal.isStarving()) {
 					animal.grow();
+					addFoodToDiet(animal);
 					
 				}
 				
@@ -95,14 +96,23 @@ public class SimulationLogic {
 		
 		do {
 			e = testingFood.get((int)(Math.random()*testingFood.size()));
-		} while(e.getName()!=animal.getName());
+		} while(e.getName().equals(animal.getName()));
+		
+		int newEnergy = e.getEnergy() + (int)(e.getEnergy()*Math.random());
+		double newSize = e.getSize() + e.getSize()*Math.random();
 		
 		if(e instanceof Food) {
-			animal.addFoodToDiet(new Food(FoodName.valueOf(e.getName()), ));
+			Food f = (Food)(e.getDeepClone());
+			f.setEnergy(newEnergy);
+			f.setSize(newSize);
+			animal.addFoodToDiet(f);
 		}
-		
-		
-		
+		else {
+			Animal a = (Animal)(e.getDeepClone());
+			a.setEnergy(newEnergy);
+			a.setSize(newSize);
+			animal.addFoodToDiet(a);
+		}
 	}
 	
 	private int average(Set<Integer> nums) {
