@@ -3,8 +3,9 @@ package Animals;
 import java.util.ArrayList;
 
 import Common.Eatable;
+import Common.Food;
 
-public class Animal implements Eatable{
+public abstract class Animal implements Eatable{
 	protected final AnimalSpecies animal;
 	protected boolean alive;
 	
@@ -12,23 +13,19 @@ public class Animal implements Eatable{
 	protected int currentEnergy;
 	protected int starvingValue;
 
-	protected ArrayList<Eatable> diet;
+	protected ArrayList<Food> diet;
 	protected double size;
 
-	public Animal(AnimalSpecies as, int maxEnergy, double size) {
+	public Animal(AnimalSpecies as, int maxEnergy, double size, ArrayList<Food> diet) {
 		this.animal = as;
 		this.maxEnergy = maxEnergy;
-		this.diet = null;
 		
 		this.currentEnergy = maxEnergy;
 		this.alive = true;
 		
 		this.starvingValue=maxEnergy/4;
 		this.size=size;
-	}
-	
-	public Animal(AnimalSpecies as, int maxEnergy, double size, ArrayList<Eatable> diet) {
-		this(as, maxEnergy, 1);
+		
 		this.diet=diet;
 	}
 	
@@ -39,7 +36,7 @@ public class Animal implements Eatable{
 	public void feed(Eatable toEat) {
 		if(!this.alive) return;
 
-		if(!dietContainsFood(toEat)) {
+		if(!dietContainsFood(AnimalSpecies.valueOf(getName()))) {
 			this.currentEnergy-=toEat.getEnergy();
 			
 			if(this.currentEnergy<=0) die();
@@ -69,6 +66,15 @@ public class Animal implements Eatable{
 		return currentEnergy;
 	}
 	
+	public void setEnergy(int energy) {
+		this.currentEnergy=energy;
+	}
+	
+	@Override
+	public void setSize(double size) {
+		this.size=size;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if(!(obj instanceof Eatable)) return false;
@@ -78,8 +84,8 @@ public class Animal implements Eatable{
 	}
 	//end
 	
-	public void addFoodToDiet(Eatable e) {
-		this.diet.add(e);
+	public void addFoodToDiet(Food foodName) {
+		this.diet.add(foodName);
 	}
 	
 	private void die() {
@@ -96,9 +102,9 @@ public class Animal implements Eatable{
 		if(currentEnergy<=0) die();
 	}
 	
-	public boolean dietContainsFood(Eatable toEat) {
-		for(Eatable e:diet) {
-			if(e.getName()==toEat.getName()) return true;
+	public boolean dietContainsFood(Food toEat) {
+		for(Food e:diet) {
+			if(e.equals(toEat)) return true;
 		}
 		return false;
 	}
@@ -108,12 +114,10 @@ public class Animal implements Eatable{
 	}
 	
 	public boolean isStarving() {
-		return currentEnergy<=starvingValue && alive;
+		return alive && currentEnergy<=starvingValue;
 	}
 	
-	public void setEnergy(int energy) {
-		this.currentEnergy=energy;
-	}
+	
 
 	@Override
 	public String toString() {
