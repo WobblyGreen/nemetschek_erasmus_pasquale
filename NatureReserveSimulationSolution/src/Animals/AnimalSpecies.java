@@ -1,5 +1,7 @@
 package Animals;
 
-public enum AnimalSpecies{
+import Common.Food;
+
+public enum AnimalSpecies implements Food{
 	LION, ZEBRA
 }

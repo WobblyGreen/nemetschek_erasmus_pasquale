@@ -9,17 +9,18 @@ import java.util.Set;
 
 import Animals.*;
 import Common.Eatable;
+import Common.Generator;
 import Food.*;
 import animalSubClasses.*;
 import foodSubClasses.*;
 
 public class SimulationLogic {
 	private ArrayList<Animal> animals;
-	private ArrayList<Eatable> testingFood;
+	private Generator generator;
 	
 	public SimulationLogic() {
-		this.animals=generateAnimalsIncludingOwnDiets();
-		this.testingFood=generateTestingFood();
+		this.generator=new Generator();
+		this.animals=generator.generateRandomAnimals();
 	}
 
 	public SimulationLogic(ArrayList<Animal> animals) {
@@ -29,30 +30,6 @@ public class SimulationLogic {
 	public void simulate() {
 		feedAllAnimals();
 	}
-
-	private ArrayList<Animal> generateAnimalsIncludingOwnDiets(){
-		ArrayList<Animal> animals = new ArrayList<Animal>();
-		
-		ArrayList<Eatable> ZebraFood = new ArrayList<>(Arrays.asList(new Banana(1), new Califlower(2)));
-		ArrayList<Eatable> LionFood = new ArrayList<>(Arrays.asList(new Lamb(1), new Chicken(2)));
-		
-		animals.add(new Zebra(8, (int)(Math.random()*10), ZebraFood));
-		animals.add(new Carnivore(12, (int)(Math.random()*10), LionFood));
-		
-		return animals;
-	}
-	
-	private ArrayList<Eatable> generateTestingFood() {
-		ArrayList<Eatable> testingFood = new ArrayList<>();
-		
-		for(AnimalSpecies as : AnimalSpecies.values()) {
-			testingFood.add(new Animal(as, (int)(Math.random()*5), (int)(Math.random()*10)));
-		}
-		for(FoodName fn : FoodName.values()) {
-			testingFood.add(new Food(fn, (int)(Math.random()*2)));
-		}
-		return testingFood;
-	}
 	
 	private void feedAllAnimals() {
 		HashMap<Integer, Animal> animalsTurns = new HashMap<>();
@@ -60,14 +37,14 @@ public class SimulationLogic {
 		for(int turn=1; !areAllAnimalsDead(); turn++) {
 			for(Animal animal : this.animals) {
 				if(Math.random()>0.5)
-					feedAnAnimal(animal);
+					animal.feed(generator.getRandomFood());
 				
 				else if(animal.isStarving())
 					animal.starve();
 				
 				if(turn%3==0 && !animal.isStarving()) {
 					animal.grow();
-					addFoodToDiet(animal);
+					animal.addFoodToDiet(generator.);
 					
 				}
 				
@@ -84,11 +61,6 @@ public class SimulationLogic {
 		System.out.println("\n- Maximum lived for " + maxTurn +" turns\n"+ animalsTurns.get(maxTurn));
 		System.out.println("\n- Average living of " + average(animalsTurns.keySet()) +" turns");
 		
-	}
-	
-	private void feedAnAnimal(Animal animal) {
-		Eatable e = this.testingFood.get((int)(Math.random()*testingFood.size()));
-		animal.feed(e);
 	}
 	
 	private void addFoodToDiet(Animal animal) {
