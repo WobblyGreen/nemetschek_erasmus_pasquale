@@ -1,5 +1,6 @@
 package NonAnimal;
 
+import Interfaces.DietItem;
 import Interfaces.Eatable;
 
 public class VegeterianFood implements Eatable{
@@ -22,8 +23,8 @@ public class VegeterianFood implements Eatable{
 		return energy;
 	}
 	
-	public String getName() {
-		return this.foodName+"";
+	public DietItem getDietItem() {
+		return foodName;
 	}
 	
 	@Override

@@ -36,7 +36,7 @@ public abstract class Animal implements Eatable{
 	public void feed(Eatable toEat) {
 		if(!this.alive) return;
 
-		if(!dietContainsFood(AnimalSpecies.valueOf(getName()))) {
+		if(!dietContainsFood(toEat.getDietItem())) {
 			this.currentEnergy-=toEat.getEnergy();
 			
 			if(this.currentEnergy<=0) die();
@@ -58,8 +58,8 @@ public abstract class Animal implements Eatable{
 		return this.size;
 	}
 	
-	public String getName() {
-		return animal+"";
+	public DietItem getDietItem() {
+		return animal;
 	}
 	
 	public int getEnergy() {
@@ -73,14 +73,6 @@ public abstract class Animal implements Eatable{
 	@Override
 	public void setSize(double size) {
 		this.size=size;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof Eatable)) return false;
-		Eatable e = (Eatable)obj;
-		
-		return this.getName()==e.getName();
 	}
 	//end
 	
