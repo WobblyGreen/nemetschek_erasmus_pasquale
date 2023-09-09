@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import Animals.*;
 import Interfaces.DietItem;
+import Interfaces.Eatable;
+import NonAnimal.VegeterianFood;
+import NonAnimal.VegeterianSpecies;
 
 public class Herbivore extends Animal {
 
@@ -13,6 +16,17 @@ public class Herbivore extends Animal {
 
 	public Herbivore(AnimalSpecies as, int maxEnergy) {
 		super(as, maxEnergy, 1, null);
+	}
+	
+	public boolean addFoodToDiet(DietItem foodName) {
+		if(foodName instanceof AnimalSpecies) return false;
+		return super.addFoodToDiet(foodName);
+	}
+	
+	@Override
+	public boolean feed(Eatable toEat) {
+		if(!(toEat instanceof VegeterianFood)) return false;
+		return super.feed(toEat);
 	}
 
 }

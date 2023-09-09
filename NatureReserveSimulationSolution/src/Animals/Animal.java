@@ -32,12 +32,13 @@ public abstract class Animal implements Eatable{
 	/**
 	 * Feeds the animal with the  passed food
 	 * @param food
+	 * @return 
 	 */
-	public void feed(Eatable toEat) {
-		if(!this.alive) return;
-
+	public boolean feed(Eatable toEat) {
+		if(!alive || toEat==null) return false;
+		
 		if(!dietContainsFood(toEat.getDietItem())) {
-			this.currentEnergy-=toEat.getEnergy();
+			this.currentEnergy--;
 			
 			if(this.currentEnergy<=0) die();
 		}
@@ -50,7 +51,8 @@ public abstract class Animal implements Eatable{
 		
 		if(toEat instanceof Animal) 
 			((Animal)toEat).die();
-			
+		
+		return true;
 	};
 	
 	//Eatable methods
@@ -70,14 +72,19 @@ public abstract class Animal implements Eatable{
 		this.currentEnergy=energy;
 	}
 	
+	public String getName() {
+		return animal+"";
+	}
+	
 	@Override
 	public void setSize(double size) {
 		this.size=size;
 	}
 	//end
 	
-	public void addFoodToDiet(DietItem foodName) {
+	public boolean addFoodToDiet(DietItem foodName) {
 		this.diet.add(foodName);
+		return true;
 	}
 	
 	private void die() {
@@ -94,9 +101,9 @@ public abstract class Animal implements Eatable{
 		if(currentEnergy<=0) die();
 	}
 	
-	public boolean dietContainsFood(DietItem toEat) {
-		for(DietItem e:diet) {
-			if(e.equals(toEat)) return true;
+	public boolean dietContainsFood(DietItem item) {
+		for(DietItem di:diet) {
+			if(di.equals(item)) return true;
 		}
 		return false;
 	}
@@ -109,7 +116,9 @@ public abstract class Animal implements Eatable{
 		return alive && currentEnergy<=starvingValue;
 	}
 	
-	
+	public ArrayList<DietItem> getDiet(){
+		return diet;
+	}
 
 	@Override
 	public String toString() {

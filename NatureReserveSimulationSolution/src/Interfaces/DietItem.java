@@ -1,6 +1,4 @@
 package Interfaces;
 
-public interface DietItem {
-
-}
+public interface DietItem {}
  

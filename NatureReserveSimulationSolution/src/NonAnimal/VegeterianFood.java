@@ -48,4 +48,8 @@ public class VegeterianFood implements Eatable{
 		
 	}
 	
+	public String getName() {
+		return foodName+"";
+	}
+	
 }
