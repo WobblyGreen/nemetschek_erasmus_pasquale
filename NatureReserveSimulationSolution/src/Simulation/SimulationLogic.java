@@ -11,18 +11,23 @@ import Interfaces.DietItem;
 import Interfaces.Eatable;
 import NonAnimal.VegeterianFood;
 import animalSubClasses.Carnivore;
+import animalSubClasses.Herbivore;
 
 public class SimulationLogic {
 	ArrayList<Animal> animals;
+	ArrayList<VegeterianFood> veggies;
 	Generator gen;
 	
 	public SimulationLogic() {
 		this.gen=new Generator();
 		this.animals=gen.generateRandomAnimalArrayList();
+		this.veggies=gen.generateRandomVeggieArrayList();
 	}
 	
 	public void simulate() {
-		System.out.println("Starting this simulation with the following animals.\n"+animals);
+		System.out.println("Starting simulation.\n");
+		System.out.println("-Available animals:\n"+animals);
+		System.out.println("-Available veggies:\n"+veggies);
 		feedAllAnimals();
 	}
 	
@@ -34,19 +39,23 @@ public class SimulationLogic {
 			System.out.print("\n---------- Day "+turn+" ----------");
 			
 			for(Animal animal:animals) {
-				System.out.println("\n>>"+animal.getName()+" Log");
+				System.out.println("\n>>"+animal.getName()+" "+animal.getEnergy()+"/"+animal.getMaxEnergy());
 				
-				Eatable e = gen.generateRandomFood();
-				if(animal instanceof Carnivore) {
-					e=animalsContainsAnimalSpecies(e.getDietItem());
+				Eatable e = null;
+				DietItem di = gen.generateRandomDietItem();
+				if(di instanceof AnimalSpecies) {
+					e=getAnimalReference(di);
 					if(e==animal) e=null;
+				}
+				else if(di instanceof VegeterianFood) {
+					e=getVeggieReference(di);
 				}
 				
 				boolean didAnimalEat=animal.feed(e);
 				
 				if(!didAnimalEat) {
 					animal.starve();
-					System.out.println("_didn't eat");
+					System.out.println("_starving");
 				}
 				else
 					System.out.println("_eats "+e.getName());
@@ -54,12 +63,12 @@ public class SimulationLogic {
 				if(turn%3==0 && !animal.isStarving()) {
 					animal.grow();
 					System.out.println("_grows up to "+animal.getSize());
-				}
-
-				if(!animal.isAlive() && !animalLifes.containsValue(animal)) {
-					animalLifes.put(turn, animal);
-					toRemove.add(animal);
-					System.out.println("<< "+animal.getName()+" died >>");
+					
+					int dietLen = animal.getDiet().size();
+					animal.addFoodToDiet(gen.generateRandomDietItem());
+					
+					if(dietLen<animal.getDiet().size())
+						System.out.println("_added "+animal.getDiet().get(0)+" to diet");
 				}
 			}
 			
@@ -77,8 +86,15 @@ public class SimulationLogic {
 		System.out.println(">Average living of " + average(animalLifes.keySet()) +" turns");
 	}
 	
-	private Animal animalsContainsAnimalSpecies(DietItem di) {
-		if(!(di instanceof AnimalSpecies)) return null;
+	private VegeterianFood getVeggieReference(DietItem di) {
+		for(VegeterianFood vf:veggies) {
+			if(vf.getDietItem().equals(di)) return vf;
+		}
+		
+		return null;
+	}
+	
+	private Animal getAnimalReference(DietItem di) {
 		for(Animal a:animals) {
 			if(a.getDietItem().equals(di)) return a;
 		}

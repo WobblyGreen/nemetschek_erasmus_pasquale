@@ -83,6 +83,8 @@ public abstract class Animal implements Eatable{
 	//end
 	
 	public boolean addFoodToDiet(DietItem foodName) {
+		if(diet.contains(foodName)) return false;
+		
 		this.diet.add(foodName);
 		return true;
 	}
@@ -118,6 +120,10 @@ public abstract class Animal implements Eatable{
 	
 	public ArrayList<DietItem> getDiet(){
 		return diet;
+	}
+	
+	public int getMaxEnergy() {
+		return maxEnergy;
 	}
 
 	@Override

@@ -84,27 +84,27 @@ public class Generator {
 		return animals;
 	}
 	
-	private VegeterianFood generateVegeterianFood(VegeterianSpecies vs) {
-		return (new VegeterianFood(vs, (int)getRandom(5), 1));
-	}
-	
-	public DietItem generateDietItem() {
-		boolean veggieOrAnimal = getRandom(1)>0.5;
-		DietItem di;
-		if(veggieOrAnimal) {
-			di=AnimalSpecies.values()[(int)getRandom(AnimalSpecies.values().length)];
-		}
-		else {
-			di=VegeterianSpecies.values()[(int)getRandom(VegeterianSpecies.values().length)];
-		}
+	public ArrayList<VegeterianFood> generateRandomVeggieArrayList(){
+		ArrayList<VegeterianFood> veggies = new ArrayList<>();
+		VegeterianSpecies[] vs = VegeterianSpecies.values();
+		int randomVeggiesLength = (int)getRandom(vs.length+1);
 		
-		return di;
+		for(int i=0; i<randomVeggiesLength; i++) {
+			veggies.add(generateVegeterianFood(generateRandomVegeterianSpecies()));
+		}
+		return veggies;
 	}
 	
+	private VegeterianFood generateVegeterianFood(VegeterianSpecies vs) {
+		return (new VegeterianFood(vs, (int)getRandom(5)+1, 1));
+	}
 	
 	public Eatable generateRandomFood() {
-		boolean veggieOrAnimal = getRandom(1)>0.5;
-		return (veggieOrAnimal ? generateAnimal(generateRandomAnimalSpecies()) : generateVegeterianFood(generateRandomVegeterianSpecies()));
+		return (getRandom(1)>0.5 ? generateAnimal(generateRandomAnimalSpecies()) : generateVegeterianFood(generateRandomVegeterianSpecies()));
+	}
+	
+	public DietItem generateRandomDietItem() {
+		return (getRandom(1)>0.5 ? generateRandomAnimalSpecies() : generateRandomVegeterianSpecies());
 	}
 	
 	private AnimalSpecies generateRandomAnimalSpecies() {
