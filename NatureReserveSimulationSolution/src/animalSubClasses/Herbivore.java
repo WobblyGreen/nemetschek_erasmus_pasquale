@@ -24,8 +24,8 @@ public class Herbivore extends Animal {
 	}
 	
 	@Override
-	public boolean feed(Eatable toEat) {
-		if(!(toEat instanceof VegeterianFood)) return false;
+	public Eatable feed(Eatable toEat) {
+		if(!(toEat instanceof VegeterianFood)) return null;
 		return super.feed(toEat);
 	}
 

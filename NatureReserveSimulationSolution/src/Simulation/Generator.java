@@ -22,43 +22,37 @@ public class Generator {
 		
 	};
 	
-	private Animal generateAnimal(AnimalSpecies as) {
-		Animal a;
+	private Animal generateAnimal(AnimalSpecies animalSpecies) {
+		Animal animal;
 		
 		final int MAX_ENERGY = (int)getRandom(10)+1;
-		final ArrayList<DietItem> DIET = generateDiet(as);
+		final ArrayList<DietItem> DIET = generateDiet(animalSpecies);
 		final int SIZE = 1;
 		
-		if(carnivores.contains(as)) {
-			a = new Carnivore(as, MAX_ENERGY, SIZE, DIET);
+		if(carnivores.contains(animalSpecies)) {
+			animal = new Carnivore(animalSpecies, MAX_ENERGY, SIZE, DIET);
 		}
-		else if(herbivores.contains(as)) {
-			a = new Herbivore(as, MAX_ENERGY, SIZE, DIET);
-		}
-		else if(omnivores.contains(as)) {
-			a = new Omnivore(as, MAX_ENERGY, SIZE, DIET);
+		else if(herbivores.contains(animalSpecies)) {
+			animal = new Herbivore(animalSpecies, MAX_ENERGY, SIZE, DIET);
 		}
 		else {
-			return null;
+			animal = new Omnivore(animalSpecies, MAX_ENERGY, SIZE, DIET);
 		}
-		return a;
+		return animal;
 			
 	}
 	
-	private ArrayList<DietItem> generateDiet(AnimalSpecies as){
+	private ArrayList<DietItem> generateDiet(AnimalSpecies animalSpecies){
 		ArrayList<DietItem> diet = new ArrayList<>();
 		
-		if(carnivores.contains(as)) {
+		if(carnivores.contains(animalSpecies)) {
 			diet.addAll(Arrays.asList(generateRandomAnimalSpecies(), generateRandomAnimalSpecies()));
 		}
-		else if(herbivores.contains(as)) {
+		else if(herbivores.contains(animalSpecies)) {
 			diet.addAll(Arrays.asList(generateRandomVegeterianSpecies(), generateRandomVegeterianSpecies()));
 		}
-		else if(omnivores.contains(as)) {
-			diet.addAll(Arrays.asList(generateRandomVegeterianSpecies(), generateRandomAnimalSpecies()));
-		}
 		else {
-			return null;
+			diet.addAll(Arrays.asList(generateRandomVegeterianSpecies(), generateRandomAnimalSpecies()));
 		}
 		
 		//removing duplicates
@@ -86,8 +80,7 @@ public class Generator {
 	
 	public ArrayList<VegeterianFood> generateRandomVeggieArrayList(){
 		ArrayList<VegeterianFood> veggies = new ArrayList<>();
-		VegeterianSpecies[] vs = VegeterianSpecies.values();
-		int randomVeggiesLength = (int)getRandom(vs.length+1);
+		int randomVeggiesLength = (int)getRandom(VegeterianSpecies.values().length+1);
 		
 		for(int i=0; i<randomVeggiesLength; i++) {
 			veggies.add(generateVegeterianFood(generateRandomVegeterianSpecies()));

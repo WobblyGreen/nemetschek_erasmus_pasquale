@@ -24,8 +24,10 @@ public class Carnivore extends Animal {
 		return super.addFoodToDiet(foodName);
 	}
 	
-	public boolean feed(Eatable toEat) {
-		if(toEat instanceof VegeterianFood) return false;
+	public Eatable feed(Eatable toEat) {
+		if(toEat instanceof VegeterianFood) return null;
+		if(toEat==this) return null;
+		
 		return super.feed(toEat);
 	}
 

@@ -34,8 +34,8 @@ public abstract class Animal implements Eatable{
 	 * @param food
 	 * @return 
 	 */
-	public boolean feed(Eatable toEat) {
-		if(!alive || toEat==null) return false;
+	public Eatable feed(Eatable toEat) {
+		if(!alive || toEat==null) return null;
 		
 		if(!dietContainsFood(toEat.getDietItem())) {
 			this.currentEnergy--;
@@ -52,7 +52,7 @@ public abstract class Animal implements Eatable{
 		if(toEat instanceof Animal) 
 			((Animal)toEat).die();
 		
-		return true;
+		return toEat;
 	};
 	
 	//Eatable methods

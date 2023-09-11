@@ -5,21 +5,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
-import Animals.Animal;
-import Animals.AnimalSpecies;
-import Interfaces.DietItem;
-import Interfaces.Eatable;
+import Animals.*;
+import Interfaces.*;
 import NonAnimal.VegeterianFood;
-import animalSubClasses.Carnivore;
-import animalSubClasses.Herbivore;
+import NonAnimal.VegeterianSpecies;
 
 public class SimulationLogic {
 	ArrayList<Animal> animals;
 	ArrayList<VegeterianFood> veggies;
 	Generator gen;
 	
-	public SimulationLogic() {
-		this.gen=new Generator();
+	public SimulationLogic(Generator gen) {
+		this.gen=gen;
 		this.animals=gen.generateRandomAnimalArrayList();
 		this.veggies=gen.generateRandomVeggieArrayList();
 	}
@@ -28,67 +25,98 @@ public class SimulationLogic {
 		System.out.println("Starting simulation.\n");
 		System.out.println("-Available animals:\n"+animals);
 		System.out.println("-Available veggies:\n"+veggies);
-		feedAllAnimals();
+		startAllAnimalsLifeCycle();
 	}
 	
-	private void feedAllAnimals() {
+	private void startAllAnimalsLifeCycle() {
 		HashMap<Integer, Animal> animalLifes = new HashMap<>();
-		ArrayList<Animal> toRemove = new ArrayList<>();
+		ArrayList<Animal> diedAnimalsToRemove = new ArrayList<>();
 		
-		for(int turn=1; !areAllAnimalsDeath() && !animals.isEmpty(); turn++) {
-			System.out.print("\n---------- Day "+turn+" ----------");
+		for(int day=0; !areAllAnimalsDeath() && !animals.isEmpty(); day++) {
+			System.out.print("\n---------- Day "+day+" ----------");
 			
 			for(Animal animal:animals) {
 				System.out.println("\n>>"+animal.getName()+" "+animal.getEnergy()+"/"+animal.getMaxEnergy());
 				
-				Eatable e = null;
-				DietItem di = gen.generateRandomDietItem();
-				if(di instanceof AnimalSpecies) {
-					e=getAnimalReference(di);
-					if(e==animal) e=null;
-				}
-				else if(di instanceof VegeterianFood) {
-					e=getVeggieReference(di);
-				}
+				Eatable eatable=getEatableReference(gen.generateRandomDietItem());
+				Eatable eatableAnimalActuallyAte = animal.feed(eatable);
 				
-				boolean didAnimalEat=animal.feed(e);
+				hasAnimalEaten(animal, eatableAnimalActuallyAte);
+				isAnimalGrowing(animal, day);
+				isAnimalExpandingDiet(animal);
 				
-				if(!didAnimalEat) {
-					animal.starve();
-					System.out.println("_starving");
-				}
-				else
-					System.out.println("_eats "+e.getName());
-				
-				if(turn%3==0 && !animal.isStarving()) {
-					animal.grow();
-					System.out.println("_grows up to "+animal.getSize());
-					
-					int dietLen = animal.getDiet().size();
-					animal.addFoodToDiet(gen.generateRandomDietItem());
-					
-					if(dietLen<animal.getDiet().size())
-						System.out.println("_added "+animal.getDiet().get(0)+" to diet");
+				if(!animal.isAlive() && !animalLifes.containsValue(animal)) {
+					animalLifes.put(day, animal);
+					diedAnimalsToRemove.add(animal);
+					System.out.println("<< "+animal.getName()+" died >>");
 				}
 			}
-			
-			for(Animal a:toRemove) {
-				animals.remove(a);
-			}
+			removeDeadAnimals(diedAnimalsToRemove);
 		}
-		
+		printStatistics(animalLifes);
+	}
+	
+	private void printStatistics(HashMap<Integer, Animal> animalLifes) {
 		int minLife = Collections.min(animalLifes.keySet());
 		int maxLife = Collections.max(animalLifes.keySet());
 		
 		System.out.println("\nStatistic>>");
-		System.out.println(">Minimum lived for " + minLife +" turns\n"+ animalLifes.get(minLife));
-		System.out.println(">Maximum lived for " + maxLife +" turns\n"+ animalLifes.get(maxLife));
-		System.out.println(">Average living of " + average(animalLifes.keySet()) +" turns");
+		System.out.println(">> Minimum lived for " + minLife +" days\n"+ animalLifes.get(minLife));
+		System.out.println(">> Maximum lived for " + maxLife +" days\n"+ animalLifes.get(maxLife));
+		System.out.println(">> Average living of " + average(animalLifes.keySet()) +" days");
 	}
 	
-	private VegeterianFood getVeggieReference(DietItem di) {
-		for(VegeterianFood vf:veggies) {
-			if(vf.getDietItem().equals(di)) return vf;
+	private void removeDeadAnimals(ArrayList<Animal> deadAnimals) {
+		for(Animal animal:deadAnimals) {
+			animals.remove(animal);
+		}
+	}
+	
+	private boolean isAnimalExpandingDiet(Animal animal) {
+		int dietLen = animal.getDiet().size();
+		animal.addFoodToDiet(gen.generateRandomDietItem());
+		
+		if(dietLen==animal.getDiet().size()) return false;
+		
+		System.out.println("_added "+animal.getDiet().get(animal.getDiet().size()-1)+" to diet");
+		return true;
+	}
+	
+	private boolean isAnimalGrowing(Animal animal, int lifeByFar) {
+		if(lifeByFar%3!=0 || animal.isStarving()) return false;
+		
+		animal.grow();
+		System.out.println("_grows up to "+animal.getSize());
+		return true;
+		
+	}
+	
+	private boolean hasAnimalEaten(Animal animal, Eatable eatableAnimalAte) {
+		if(eatableAnimalAte==null) {
+			animal.starve();
+			System.out.println("_starving");
+			return false;
+		}
+		else
+			System.out.println("_eats "+eatableAnimalAte.getName());
+		
+		return true;
+	}
+	
+	private Eatable getEatableReference(DietItem dietItem) {
+		Eatable eatable = null;
+		if(dietItem instanceof AnimalSpecies)
+			eatable=getAnimalReference(dietItem);
+		
+		else if(dietItem instanceof VegeterianSpecies)
+			eatable=getVeggieReference(dietItem);
+		
+		return eatable;
+	}
+	
+	private VegeterianFood getVeggieReference(DietItem dietItem) {
+		for(VegeterianFood veggie:veggies) {
+			if(veggie.getDietItem().equals(dietItem)) return veggie;
 		}
 		
 		return null;
@@ -103,8 +131,8 @@ public class SimulationLogic {
 	}
 	
 	private boolean areAllAnimalsDeath() {
-		for(Animal a:animals) {
-			if(a.isAlive()) return false;
+		for(Animal animal:animals) {
+			if(animal.isAlive()) return false;
 		}
 		return true;
 	}
