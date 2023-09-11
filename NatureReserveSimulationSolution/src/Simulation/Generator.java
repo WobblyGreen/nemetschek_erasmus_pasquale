@@ -65,7 +65,7 @@ public class Generator {
 		return diet;
 	}
 	
-	private double getRandom(int multiplier) {
+	public double getRandom(int multiplier) {
 		return Math.random()*multiplier;
 	}
 	

@@ -38,15 +38,21 @@ public abstract class Animal implements Eatable{
 		if(!alive || toEat==null) return null;
 		
 		if(!dietContainsFood(toEat.getDietItem())) {
-			this.currentEnergy--;
-			
-			if(this.currentEnergy<=0) die();
+			starve();
+			toEat.setEnergy(toEat.getEnergy()-1);
 		}
+		
+		else if(toEat.getEnergy()<=0)
+			starve();
 		
 		else{
 			this.currentEnergy+=toEat.getEnergy();
-			if(this.currentEnergy>this.maxEnergy)
+			toEat.setEnergy(0);
+			
+			if(this.currentEnergy>this.maxEnergy) {
+				toEat.setEnergy(currentEnergy-maxEnergy);
 				currentEnergy=maxEnergy;
+			}
 		}
 		
 		if(toEat instanceof Animal) 
@@ -91,7 +97,6 @@ public abstract class Animal implements Eatable{
 	
 	private void die() {
 		this.alive=false;
-		this.currentEnergy=0;
 	}
 	
 	public void grow() {

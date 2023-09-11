@@ -5,12 +5,14 @@ import Interfaces.Eatable;
 
 public class VegeterianFood implements Eatable{
 	protected VegeterianSpecies foodName;
-	protected int energy;
+	protected int currentEnergy;
+	protected int maxEnergy;
 	protected double size;
 	
 	public VegeterianFood(VegeterianSpecies foodName, int energy) {
 		this.foodName=foodName;
-		this.energy=energy;
+		this.maxEnergy=energy;
+		this.currentEnergy=energy;
 		this.size=1;
 	}
 
@@ -20,7 +22,7 @@ public class VegeterianFood implements Eatable{
 	}
 
 	public int getEnergy() {
-		return energy;
+		return currentEnergy;
 	}
 	
 	public DietItem getDietItem() {
@@ -29,7 +31,7 @@ public class VegeterianFood implements Eatable{
 	
 	@Override
 	public String toString() {
-		return foodName+" "+energy;
+		return foodName+" "+currentEnergy;
 	}
 
 	@Override
@@ -39,17 +41,22 @@ public class VegeterianFood implements Eatable{
 
 	@Override
 	public void setEnergy(int energy) {
-		this.energy=energy;
+		this.currentEnergy=energy;
+	}
+
+	@Override
+	public int getMaxEnergy() {
+		return maxEnergy;
+	}
+	
+	public String getName() {
+		return foodName+"";
 	}
 
 	@Override
 	public void setSize(double size) {
 		// TODO Auto-generated method stub
 		
-	}
-	
-	public String getName() {
-		return foodName+"";
 	}
 	
 }

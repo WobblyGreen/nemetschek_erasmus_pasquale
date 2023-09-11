@@ -30,30 +30,53 @@ public class SimulationLogic {
 	
 	private void startAllAnimalsLifeCycle() {
 		HashMap<Integer, Animal> animalLifes = new HashMap<>();
-		ArrayList<Animal> diedAnimalsToRemove = new ArrayList<>();
+		ArrayList<Animal> diedAnimals = new ArrayList<>();
 		
-		for(int day=0; !areAllAnimalsDeath() && !animals.isEmpty(); day++) {
+		int day=0;
+		
+		while(!areAllAnimalsDeath()) {
 			System.out.print("\n---------- Day "+day+" ----------");
 			
 			for(Animal animal:animals) {
+				if(!animal.isAlive()) {
+					if(!animalLifes.containsValue(animal)) {
+						diedAnimals.add(animal);
+						insertDeadAnimal(animalLifes, day, animal);
+					}
+					continue;
+				}
 				System.out.println("\n>>"+animal.getName()+" "+animal.getEnergy()+"/"+animal.getMaxEnergy());
 				
 				Eatable eatable=getEatableReference(gen.generateRandomDietItem());
-				Eatable eatableAnimalActuallyAte = animal.feed(eatable);
 				
-				hasAnimalEaten(animal, eatableAnimalActuallyAte);
+				hasAnimalEaten(animal, animal.feed(eatable));
 				isAnimalGrowing(animal, day);
 				isAnimalExpandingDiet(animal);
-				
-				if(!animal.isAlive() && !animalLifes.containsValue(animal)) {
-					animalLifes.put(day, animal);
-					diedAnimalsToRemove.add(animal);
-					System.out.println("<< "+animal.getName()+" died >>");
-				}
 			}
-			removeDeadAnimals(diedAnimalsToRemove);
+			
+			veggieRegrow();
+			day++;
 		}
+		insertDeadAnimal(animalLifes, day, getLastDeadAnimal(diedAnimals));
 		printStatistics(animalLifes);
+	}
+	
+	private Animal getLastDeadAnimal(ArrayList<Animal> diedAnimals) {
+		for(Animal animal : animals) {
+			if(!diedAnimals.contains(animal)) return animal;
+		}
+		
+		return null;
+	}
+	
+	private void veggieRegrow() {
+		for(VegeterianFood veggie:veggies)
+			veggie.setEnergy((int)gen.getRandom(veggie.getMaxEnergy())+1);
+	}
+	
+	private void insertDeadAnimal(HashMap<Integer, Animal> animalLifes, int day, Animal animal) {
+		animalLifes.put(day, animal);
+		System.out.println("\n<< "+animal.getName()+" died >>");
 	}
 	
 	private void printStatistics(HashMap<Integer, Animal> animalLifes) {
@@ -68,7 +91,7 @@ public class SimulationLogic {
 	
 	private void removeDeadAnimals(ArrayList<Animal> deadAnimals) {
 		for(Animal animal:deadAnimals) {
-			animals.remove(animal);
+			if(animal.getEnergy()<=0) animals.remove(animal);
 		}
 	}
 	
