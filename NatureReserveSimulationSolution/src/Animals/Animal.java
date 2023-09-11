@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import Interfaces.DietItem;
 import Interfaces.Eatable;
+import events.Emitter;
 
-public abstract class Animal implements Eatable{
+public abstract class Animal implements Eatable, Emitter{
 	protected final AnimalSpecies animal;
 	protected boolean alive;
 	

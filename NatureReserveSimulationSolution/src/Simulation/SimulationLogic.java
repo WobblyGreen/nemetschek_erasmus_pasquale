@@ -9,14 +9,19 @@ import Animals.*;
 import Interfaces.*;
 import NonAnimal.VegeterianFood;
 import NonAnimal.VegeterianSpecies;
+import events.EmitMessage;
+import events.Event;
+import events.EventListener;
 
 public class SimulationLogic {
 	ArrayList<Animal> animals;
 	ArrayList<VegeterianFood> veggies;
 	Generator gen;
+	EventListener eventListener;
 	
-	public SimulationLogic(Generator gen) {
+	public SimulationLogic(Generator gen, EventListener eventListener) {
 		this.gen=gen;
+		this.eventListener=eventListener;
 		this.animals=gen.generateRandomAnimalArrayList();
 		this.veggies=gen.generateRandomVeggieArrayList();
 	}
@@ -35,7 +40,7 @@ public class SimulationLogic {
 		int day=0;
 		
 		while(!areAllAnimalsDeath()) {
-			System.out.print("\n---------- Day "+day+" ----------");
+			eventListener.notify(Event.NEW_DAY, new EmitMessage(null, day+""));
 			
 			for(Animal animal:animals) {
 				if(!animal.isAlive()) {

@@ -1,0 +1,5 @@
+package events;
+
+public enum Event {
+	ANIMAL_EAT, ANIMAL_GROW, ANIMAL_EXPANDING_DIET, ANIMAL_STARVE, ANIMAL_DIE, NEW_DAY
+}
