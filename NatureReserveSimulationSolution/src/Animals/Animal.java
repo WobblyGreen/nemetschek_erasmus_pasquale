@@ -2,94 +2,70 @@ package Animals;
 
 import java.util.ArrayList;
 
-import Interfaces.DietItem;
-import Interfaces.Eatable;
-import events.Emitter;
+import events.Event;
+import food.Food;
+import food.FoodName;
 
-public abstract class Animal implements Eatable, Emitter{
-	protected final AnimalSpecies animal;
+public abstract class Animal extends Food{
+	protected ArrayList<FoodName> diet;
 	protected boolean alive;
-	  
-	protected final int maxEnergy;
-	protected int currentEnergy;
-	protected int starvingValue;
-
-	protected ArrayList<DietItem> diet;
-	protected double size;
-
-	public Animal(AnimalSpecies as, int maxEnergy, double size, ArrayList<DietItem> diet) {
-		this.animal = as;
-		this.maxEnergy = maxEnergy;
-		
-		this.currentEnergy = maxEnergy;
-		this.alive = true;
-		
-		this.starvingValue=maxEnergy/4;
-		this.size=size;
-		
+	private int starvingValue;
+	
+	public Animal(FoodName name, double size, int currentEnergy, int maxEnergy, boolean alive, ArrayList<FoodName> diet) {
+		super(name, size, currentEnergy, maxEnergy);
+		this.alive=alive;
 		this.diet=diet;
 	}
-	
+
 	/**
 	 * Feeds the animal with the  passed food
 	 * @param food
 	 * @return 
 	 */
-	public Eatable feed(Eatable toEat) {
-		if(!alive || toEat==null) return null;
+	public Event feed(Food food) {
+		if(!alive || food==null) return null;
 		
-		if(!dietContainsFood(toEat.getDietItem())) {
-			starve();
-			toEat.setEnergy(toEat.getEnergy()-1);
+		if(!dietContainsFood(food.getName())) {
+			changeEnergy(-1);
 		}
-		
-		else if(toEat.getEnergy()<=0)
-			starve();
 		
 		else{
-			this.currentEnergy+=toEat.getEnergy();
-			toEat.setEnergy(0);
-			
-			if(this.currentEnergy>this.maxEnergy) {
-				toEat.setEnergy(currentEnergy-maxEnergy);
-				currentEnergy=maxEnergy;
-			}
+			int leftOverEnergy = changeEnergy(food.getCurrentEnergy());
+			food.setCurrentEnergy(leftOverEnergy);
 		}
 		
-		if(toEat instanceof Animal) 
-			((Animal)toEat).die();
+		if(food instanceof Animal) 
+			((Animal)food).die();
 		
-		return toEat;
+		return null;
 	};
 	
-	//Eatable methods
-	public double getSize() {
-		return this.size;
+	private int changeEnergy(int value) {
+		int leftOverEnergy=0;
+		this.currentEnergy+=value;
+		
+		if(currentEnergy<0) {
+			leftOverEnergy=currentEnergy;
+			currentEnergy=0;
+			die();
+		}
+		
+		else if(currentEnergy>maxEnergy) {
+			leftOverEnergy=currentEnergy-maxEnergy;
+			currentEnergy=maxEnergy;
+		}
+		
+		return leftOverEnergy;
 	}
 	
-	public DietItem getDietItem() {
-		return animal;
+	public boolean dietContainsFood(FoodName food) {
+		for(FoodName foodName:diet) {
+			if(foodName.equals(food)) return true;
+		}
+		return false;
 	}
 	
-	public int getEnergy() {
-		return currentEnergy;
-	}
-	
-	public void setEnergy(int energy) {
-		this.currentEnergy=energy;
-	}
-	
-	public String getName() {
-		return animal+"";
-	}
-	
-	@Override
-	public void setSize(double size) {
-		this.size=size;
-	}
-	//end
-	
-	public boolean addFoodToDiet(DietItem foodName) {
+	public boolean addFoodToDiet(FoodName foodName) {
 		if(diet.contains(foodName)) return false;
 		
 		this.diet.add(foodName);
@@ -104,37 +80,21 @@ public abstract class Animal implements Eatable, Emitter{
 		this.size+=(size*Math.random()*((double)currentEnergy/maxEnergy));
 	}
 	
-	public void starve() {
-		this.currentEnergy--;
-		if(currentEnergy<=0) die();
-	}
-	
-	public boolean dietContainsFood(DietItem item) {
-		for(DietItem di:diet) {
-			if(di.equals(item)) return true;
-		}
-		return false;
-	}
-	
 	public boolean isAlive() {
 		return alive;
 	}
 	
 	public boolean isStarving() {
-		return alive && currentEnergy<=starvingValue;
+		return currentEnergy<=starvingValue;
 	}
 	
-	public ArrayList<DietItem> getDiet(){
+	public ArrayList<FoodName> getDiet(){
 		return diet;
-	}
-	
-	public int getMaxEnergy() {
-		return maxEnergy;
 	}
 
 	@Override
 	public String toString() {
-		String animalInfo = this.animal+ " " + (int)size +" "+ this.currentEnergy + "/" + this.maxEnergy + "\n" + this.diet;
+		String animalInfo = this.name+ " " + (int)size +" "+ this.currentEnergy + "/" + this.maxEnergy + "\n" + this.diet;
 		return animalInfo;
 	}
 }
