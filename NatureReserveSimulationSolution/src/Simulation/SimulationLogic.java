@@ -40,9 +40,12 @@ public class SimulationLogic {
 		int day=0;
 		
 		while(!areAllAnimalsDeath()) {
+			eventListener.notify(Event.SUMMARY, new EmitMessage(null, "DAY: "+day+" | ANIMALS ALIVE: "+(animals.size()-diedAnimals.size())+"/"+animals.size()+"\n"));
 			eventListener.notify(Event.NEW_DAY, new EmitMessage(null, day+""));
 			
 			for(Animal animal:animals) {
+				EmitMessage messageToEmit = new EmitMessage(animal);
+				
 				if(!animal.isAlive()) {
 					if(!animalLifes.containsValue(animal)) {
 						diedAnimals.add(animal);
@@ -50,13 +53,16 @@ public class SimulationLogic {
 					}
 					continue;
 				}
-				System.out.println("\n>>"+animal.getName()+" "+animal.getEnergy()+"/"+animal.getMaxEnergy());
+				messageToEmit.setMessage(animal.getName()+" "+animal.getEnergy()+"/"+animal.getMaxEnergy());
+				eventListener.notify(Event.ANIMAL_CYCLE_STARTED, messageToEmit);
 				
 				Eatable eatable=getEatableReference(gen.generateRandomDietItem());
 				
-				hasAnimalEaten(animal, animal.feed(eatable));
-				isAnimalGrowing(animal, day);
-				isAnimalExpandingDiet(animal);
+				hasAnimalEaten(animal, animal.feed(eatable), messageToEmit);
+				
+				isAnimalGrowing(animal, day, messageToEmit);
+				
+				isAnimalExpandingDiet(animal, messageToEmit);
 			}
 			
 			veggieRegrow();
@@ -81,7 +87,6 @@ public class SimulationLogic {
 	
 	private void insertDeadAnimal(HashMap<Integer, Animal> animalLifes, int day, Animal animal) {
 		animalLifes.put(day, animal);
-		System.out.println("\n<< "+animal.getName()+" died >>");
 	}
 	
 	private void printStatistics(HashMap<Integer, Animal> animalLifes) {
@@ -94,41 +99,43 @@ public class SimulationLogic {
 		System.out.println(">> Average living of " + average(animalLifes.keySet()) +" days");
 	}
 	
-	private void removeDeadAnimals(ArrayList<Animal> deadAnimals) {
-		for(Animal animal:deadAnimals) {
-			if(animal.getEnergy()<=0) animals.remove(animal);
-		}
-	}
-	
-	private boolean isAnimalExpandingDiet(Animal animal) {
+	private boolean isAnimalExpandingDiet(Animal animal, EmitMessage emitMessage) {
 		int dietLen = animal.getDiet().size();
 		animal.addFoodToDiet(gen.generateRandomDietItem());
 		
 		if(dietLen==animal.getDiet().size()) return false;
 		
-		System.out.println("_added "+animal.getDiet().get(animal.getDiet().size()-1)+" to diet");
+		emitMessage.setMessage(""+animal.getDiet().get(dietLen));
+		eventListener.notify(Event.ANIMAL_EXPANDING_DIET, emitMessage);
 		return true;
 	}
 	
-	private boolean isAnimalGrowing(Animal animal, int lifeByFar) {
-		if(lifeByFar%3!=0 || animal.isStarving()) return false;
-		
-		animal.grow();
-		System.out.println("_grows up to "+animal.getSize());
-		return true;
-		
-	}
-	
-	private boolean hasAnimalEaten(Animal animal, Eatable eatableAnimalAte) {
-		if(eatableAnimalAte==null) {
-			animal.starve();
-			System.out.println("_starving");
+	private boolean isAnimalGrowing(Animal animal, int lifeByFar, EmitMessage emitMessage) {
+		if(lifeByFar%3!=0 || animal.isStarving()) {
 			return false;
 		}
-		else
-			System.out.println("_eats "+eatableAnimalAte.getName());
+		
+		animal.grow();
+		
+		emitMessage.setMessage((animal.getSize()+" ").substring(0, 4));
+		eventListener.notify(Event.ANIMAL_GROW, emitMessage);
 		
 		return true;
+	}
+	
+	private boolean hasAnimalEaten(Animal animal, Eatable eatableAnimalAte, EmitMessage emitMessage) {
+		if(eatableAnimalAte!=null) {
+			emitMessage.setMessage(""+eatableAnimalAte.getName()+" "+eatableAnimalAte.getEnergy()+"/"+eatableAnimalAte.getMaxEnergy());
+			eventListener.notify(Event.ANIMAL_EAT, emitMessage);
+			return true;
+		}
+		
+		animal.starve();
+		
+		emitMessage.setMessage("");
+		eventListener.notify(Event.ANIMAL_STARVE, emitMessage);
+		
+		return false;
 	}
 	
 	private Eatable getEatableReference(DietItem dietItem) {

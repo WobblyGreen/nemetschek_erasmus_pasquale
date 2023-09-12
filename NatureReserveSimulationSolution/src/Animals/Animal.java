@@ -9,7 +9,7 @@ import events.Emitter;
 public abstract class Animal implements Eatable, Emitter{
 	protected final AnimalSpecies animal;
 	protected boolean alive;
-	
+	  
 	protected final int maxEnergy;
 	protected int currentEnergy;
 	protected int starvingValue;
