@@ -1,11 +1,10 @@
-package animalSubClasses;
+package Animals;
 
 import java.util.ArrayList;
 
-import Animals.*;
 import Interfaces.DietItem;
 import Interfaces.Eatable;
-import NonAnimal.VegeterianFood;
+import NonAnimal.Plants;
 import NonAnimal.VegeterianSpecies;
 
 public class Carnivore extends Animal {
@@ -25,7 +24,7 @@ public class Carnivore extends Animal {
 	}
 	
 	public Eatable feed(Eatable toEat) {
-		if(toEat instanceof VegeterianFood) return null;
+		if(toEat instanceof Plants) return null;
 		if(toEat==this) return null;
 		
 		return super.feed(toEat);
