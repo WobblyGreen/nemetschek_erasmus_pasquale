@@ -7,6 +7,7 @@ import food.Food;
 import food.FoodName;
 
 public abstract class Animal extends Food{
+<<<<<<< HEAD
 	protected ArrayList<FoodName> diet;
 	protected boolean alive;
 	private int starvingValue;
@@ -14,6 +15,14 @@ public abstract class Animal extends Food{
 	public Animal(FoodName name, double size, int currentEnergy, int maxEnergy, boolean alive, ArrayList<FoodName> diet) {
 		super(name, size, currentEnergy, maxEnergy);
 		this.alive=alive;
+=======
+	protected int starvingValue;
+	protected ArrayList<FoodName> diet;
+	
+	public Animal(FoodName name, double size, int maxEnergy, ArrayList<FoodName> diet) {
+		super(name, size, maxEnergy);
+		this.starvingValue=maxEnergy/3;
+>>>>>>> 6b9ad2c (Fixed inheritance between Animal, Plants and Food)
 		this.diet=diet;
 	}
 
@@ -23,6 +32,7 @@ public abstract class Animal extends Food{
 	 * @return 
 	 */
 	public Event feed(Food food) {
+<<<<<<< HEAD
 		if(!alive || food==null) return null;
 		
 		if(!dietContainsFood(food.getName())) {
@@ -67,19 +77,38 @@ public abstract class Animal extends Food{
 	
 	public boolean addFoodToDiet(FoodName foodName) {
 		if(diet.contains(foodName)) return false;
+=======
+		if(!alive || food==null) return Event.CANT_EAT;
 		
-		this.diet.add(foodName);
-		return true;
+		Event event=null;
+		if(!dietContainsFood(food)) {
+			starve();
+			event=Event.EAT_BAD_FOOD;
+		}
+		
+		else{
+			food.changeEnergy(this.changeEnergy(food.getCurrentEnergy()));
+			event=Event.EAT;
+		}
+		
+		return event;
+	};
+	
+	public Event addFoodToDiet(Food food) {
+		if(this.dietContainsFood(food)) return null;
+>>>>>>> 6b9ad2c (Fixed inheritance between Animal, Plants and Food)
+		
+		diet.add(food.getName());
+		return Event.EXPANDING_DIET;
 	}
 	
-	private void die() {
-		this.alive=false;
+	public Event grow() {
+		size+=(size*Math.random()*((double)currentEnergy/maxEnergy));
+		return Event.GROW;
+		
 	}
 	
-	public void grow() {
-		this.size+=(size*Math.random()*((double)currentEnergy/maxEnergy));
-	}
-	
+<<<<<<< HEAD
 	public boolean isAlive() {
 		return alive;
 	}
@@ -92,6 +121,27 @@ public abstract class Animal extends Food{
 		return diet;
 	}
 
+=======
+	public void starve() {
+		this.changeEnergy(-1);
+	}
+	
+	public boolean dietContainsFood(Food food) {
+		for(FoodName fn:diet) {
+			if(fn.equals(food.getName())) return true;
+		}
+		return false;
+	}
+	
+	public Event isStarving() {
+		return (currentEnergy<=starvingValue ? Event.STARVE : null);
+	}
+	
+	public ArrayList<FoodName> getDiet(){
+		return diet;
+	}
+	
+>>>>>>> 6b9ad2c (Fixed inheritance between Animal, Plants and Food)
 	@Override
 	public String toString() {
 		String animalInfo = this.name+ " " + (int)size +" "+ this.currentEnergy + "/" + this.maxEnergy + "\n" + this.diet;

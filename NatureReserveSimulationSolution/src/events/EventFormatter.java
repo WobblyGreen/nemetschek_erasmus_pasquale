@@ -17,22 +17,22 @@ public class EventFormatter {
 			formattedEvent="\n---------- Day "+message.getMessage()+" ----------";
 			break;
 			
-		case ANIMAL_EAT:
+		case EAT:
 			formattedEvent="_eats ";
 			break;
 			
-		case ANIMAL_GROW:
+		case GROW:
 			formattedEvent="_grows to ";
 			break;
-		case ANIMAL_EXPANDING_DIET:
+		case EXPANDING_DIET:
 			formattedEvent="_adding in diet ";
 			break;
 			
-		case ANIMAL_STARVE:
+		case STARVE:
 			formattedEvent="_starve";
 			break;
 		
-		case ANIMAL_DIE:
+		case DIE:
 			formattedEvent="_died";
 			break;
 		

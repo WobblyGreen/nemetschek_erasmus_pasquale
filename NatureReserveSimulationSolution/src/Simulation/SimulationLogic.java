@@ -6,31 +6,30 @@ import java.util.HashMap;
 import java.util.Set;
 
 import Animals.*;
-import Interfaces.*;
-import NonAnimal.VegeterianFood;
-import NonAnimal.VegeterianSpecies;
+import NonAnimal.Plants;
 import events.EmitMessage;
 import events.Event;
 import events.EventListener;
+import food.Food;
+import food.FoodName;
 
 public class SimulationLogic {
-	ArrayList<Animal> animals;
-	ArrayList<VegeterianFood> veggies;
+	ArrayList<Food> foods;
 	Generator gen;
 	EventListener eventListener;
 	
 	public SimulationLogic(Generator gen, EventListener eventListener) {
 		this.gen=gen;
 		this.eventListener=eventListener;
-		this.animals=gen.generateRandomAnimalArrayList();
-		this.veggies=gen.generateRandomVeggieArrayList();
 	}
 	
 	public void simulate() {
 		System.out.println("Starting simulation.\n");
-		System.out.println("-Available animals:\n"+animals);
-		System.out.println("-Available veggies:\n"+veggies);
-		startAllAnimalsLifeCycle();
+
+	}
+	
+	private void feedOneAnimal() {
+		
 	}
 	
 	private void startAllAnimalsLifeCycle() {
@@ -81,7 +80,7 @@ public class SimulationLogic {
 	}
 	
 	private void veggieRegrow() {
-		for(VegeterianFood veggie:veggies)
+		for(Plants veggie:veggies)
 			veggie.setEnergy((int)gen.getRandom(veggie.getMaxEnergy())+1);
 	}
 	
@@ -149,8 +148,8 @@ public class SimulationLogic {
 		return eatable;
 	}
 	
-	private VegeterianFood getVeggieReference(DietItem dietItem) {
-		for(VegeterianFood veggie:veggies) {
+	private Plants getVeggieReference(DietItem dietItem) {
+		for(Plants veggie:veggies) {
 			if(veggie.getDietItem().equals(dietItem)) return veggie;
 		}
 		
