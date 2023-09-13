@@ -6,6 +6,9 @@ import java.util.LinkedHashSet;
 
 import Animals.Animal;
 import Animals.AnimalSpecies;
+import Animals.Carnivore;
+import Animals.Herbivore;
+import Animals.Omnivore;
 import Interfaces.DietItem;
 import Interfaces.Eatable;
 import NonAnimal.*;
@@ -78,8 +81,8 @@ public class Generator {
 		return animals;
 	}
 	
-	public ArrayList<VegeterianFood> generateRandomVeggieArrayList(){
-		ArrayList<VegeterianFood> veggies = new ArrayList<>();
+	public ArrayList<Plants> generateRandomVeggieArrayList(){
+		ArrayList<Plants> veggies = new ArrayList<>();
 		int randomVeggiesLength = (int)getRandom(VegeterianSpecies.values().length+1);
 		
 		for(int i=0; i<randomVeggiesLength; i++) {
@@ -88,8 +91,8 @@ public class Generator {
 		return veggies;
 	}
 	
-	private VegeterianFood generateVegeterianFood(VegeterianSpecies vs) {
-		return (new VegeterianFood(vs, (int)getRandom(5)+1, 1));
+	private Plants generateVegeterianFood(VegeterianSpecies vs) {
+		return (new Plants(vs, (int)getRandom(5)+1, 1));
 	}
 	
 	public Eatable generateRandomFood() {

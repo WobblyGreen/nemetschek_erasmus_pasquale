@@ -1,8 +1,7 @@
-package animalSubClasses;
+package Animals;
 
 import java.util.ArrayList;
 
-import Animals.*;
 import Interfaces.DietItem;
 import Interfaces.Eatable;
 
