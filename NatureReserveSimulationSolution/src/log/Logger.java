@@ -1,30 +1,22 @@
 package log;
 
-import events.EmitMessage;
-import events.Event;
-import events.EventFormatter;
-import events.EventListener;
+import java.util.ArrayList;
+
+import events.*;
 
 public class Logger implements EventListener{
 	private EventFormatter eventFormatter;
 	private boolean summary;
 	
-	public Logger(EventFormatter ef) {
-		this.eventFormatter=ef;
-	}
-	
 	public Logger(EventFormatter ef, boolean summary) {
-		this(ef);
+		this.eventFormatter=ef;
 		this.summary=summary;
 	}
 
-	@Override
-	public void notify(Event e) {
-		System.out.println("Event "+e+" occurred");
-	}
 
 	@Override
-	public void notify(Event e, EmitMessage message) {
+	public void notify(Emitter emitter, EmitMessage message) {
+		Event e = message.getEvent();
 		String toConsole;
 		if(e==null) e=Event.GENERIC;
 		
@@ -39,5 +31,14 @@ public class Logger implements EventListener{
 			if(!toConsole.isBlank()) toConsole+="\n";
 		}
 		System.out.print(toConsole);
+		
+	}
+
+	@Override
+	public void notifyAll(Emitter emitter, ArrayList<EmitMessage> messages) {
+		for(EmitMessage msg:messages) {
+			notify(emitter, msg);
+		}
+		
 	}
 }
