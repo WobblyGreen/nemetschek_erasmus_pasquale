@@ -1,11 +1,11 @@
-package Animals;
+package animals;
 
 import java.util.ArrayList;
 
-import NonAnimal.Plants;
 import events.Event;
 import food.Food;
 import food.FoodName;
+import nonAnimal.Plants;
 
 public abstract class Carnivore extends Animal {
 	
@@ -20,9 +20,15 @@ public abstract class Carnivore extends Animal {
 	}
 	
 	public Event feed(Food food) {
-		if(food instanceof Plants) return Event.CANT_EAT;
-		if(food==this) return Event.EAT_ITSELF;
-		
+		if(food instanceof Plants) {
+			starve();
+			return Event.CANT_EAT;
+		}
+		if(food==this) {
+			starve();
+			return Event.EAT_ITSELF;
+		}
+		food.die();
 		return super.feed(food);
 	}
 

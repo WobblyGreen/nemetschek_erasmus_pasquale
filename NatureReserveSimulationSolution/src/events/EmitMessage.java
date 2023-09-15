@@ -1,16 +1,26 @@
 package events;
 
 public class EmitMessage {
-	Emitter emitter;
-	String message;
+	private Emitter emitter;
+	private Event event;
+	private String message;
+
 	
-	public EmitMessage(Emitter emitter) {
-		this.emitter=emitter;
+	public EmitMessage(Event event, String message) {
+		this.message=message;
+		this.event=event;
 	}
 	
-	public EmitMessage(Emitter emitter, String message) {
-		this.emitter=emitter;
-		this.message=message;
+	public Event getEvent() {
+		return event;
+	}
+
+	public void setEvent(Event event) {
+		this.event = event;
+	}
+
+	public void setEmitter(Emitter emitter) {
+		this.emitter = emitter;
 	}
 
 	public Emitter getEmitter() {

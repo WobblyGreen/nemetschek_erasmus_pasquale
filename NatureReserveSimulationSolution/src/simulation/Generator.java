@@ -1,11 +1,13 @@
-package Simulation;
+package simulation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
-import AnimalSubClasses.*;
-import NonAnimalSubClasses.*;
+import animalSubClasses.*;
+import animals.Animal;
 import food.Food;
 import food.FoodName;
+import nonAnimalSubClasses.*;
 
 public class Generator {
 	
@@ -16,14 +18,19 @@ public class Generator {
 		return Math.random()*multiplier;
 	}
 	
+	public ArrayList<Animal> generateRandomAnimals(){
+		return new ArrayList<Animal>(Arrays.asList(new Lion(), new Zebra()));
+	}
+	
 	public ArrayList<Food> generateRandomFoods(){
 		ArrayList<Food> foods = new ArrayList<>();
 		
-		int numOfGeneratedFoods = (int)getRandom(10)+1;
+		/*int numOfGeneratedFoods = (int)getRandom(5)+1;
 		
 		for(int i=0; i<numOfGeneratedFoods; i++) {
 			foods.add(generateRandomFood());
-		}
+		}*/
+		foods.add(new Cauliflower());
 		
 		return foods;
 	}

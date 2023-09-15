@@ -1,9 +1,9 @@
-package AnimalSubClasses;
+package animalSubClasses;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import Animals.Herbivore;
+import animals.Herbivore;
 import food.FoodName;
 
 public final class Zebra extends Herbivore{

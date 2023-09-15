@@ -18,7 +18,6 @@ public class Logger implements EventListener{
 	public void notify(Emitter emitter, EmitMessage message) {
 		Event e = message.getEvent();
 		String toConsole;
-		if(e==null) e=Event.GENERIC;
 		
 		if(summary) {
 			if(e!=Event.SUMMARY) return;
@@ -37,6 +36,7 @@ public class Logger implements EventListener{
 	@Override
 	public void notifyAll(Emitter emitter, ArrayList<EmitMessage> messages) {
 		for(EmitMessage msg:messages) {
+			if(msg.getEvent()==null) continue;
 			notify(emitter, msg);
 		}
 		

@@ -1,7 +1,7 @@
-package NonAnimalSubClasses;
+package nonAnimalSubClasses;
 
-import NonAnimal.Plants;
 import food.FoodName;
+import nonAnimal.Plants;
 
 public final class Banana extends Plants{
 

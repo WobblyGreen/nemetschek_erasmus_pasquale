@@ -1,19 +1,20 @@
-package Simulation;
+package simulation;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
-import Animals.*;
-import NonAnimal.Plants;
+import animals.*;
 import events.EmitMessage;
 import events.Event;
 import events.EventListener;
 import food.Food;
 import food.FoodName;
+import nonAnimal.Plants;
 
 public class SimulationLogic {
+	ArrayList<Animal> animals;
 	ArrayList<Food> foods;
 	Generator gen;
 	EventListener eventListener;
@@ -21,12 +22,15 @@ public class SimulationLogic {
 	public SimulationLogic(Generator gen, EventListener eventListener) {
 		this.gen=gen;
 		this.eventListener=eventListener;
+		this.animals=gen.generateRandomAnimals();
+		
 		this.foods=gen.generateRandomFoods();
+		this.foods.addAll(animals);
 	}
 	
 	public void simulate() {
 		System.out.println("Starting simulation.\n");
-		System.out.println("Food used in this simulation:\n"+foods);
+		System.out.println("Environment in this simulation:\n"+foods);
 		startAllAnimalsLifeCycle();
 
 	}
@@ -38,27 +42,25 @@ public class SimulationLogic {
 		
 		int day=1;
 		
-		while(!areAllAnimalsDeath()) {
-			eventListener.notify(null, new EmitMessage(Event.SUMMARY, "DAY: "+day+" | ANIMALS ALIVE: "+"/"+"\n"));
+		while(animals.size()!=diedAnimals.size()) {
+			eventListener.notify(null, new EmitMessage(Event.SUMMARY, "DAY: "+day+" | ANIMALS ALIVE: "+(animals.size()-diedAnimals.size())+"/"+animals.size()+"\n"));
 			eventListener.notify(null, new EmitMessage(Event.NEW_DAY, day+""));
 			
-			for(Food food:foods) {
-				if(!(food instanceof Animal)) continue;
-				
-				Animal animal = (Animal)food;
+			for(Animal animal:animals) {
+				eventListener.notify(animal, new EmitMessage(Event.ANIMAL_CYCLE_STARTED, animal.getName()+" "+animal.getCurrentEnergy()+"/"+animal.getMaxEnergy()));
 				
 				if(!animal.isAlive()) {
 					if(!animalLifes.containsValue(animal)) {
 						diedAnimals.add(animal);
 						insertDeadAnimal(animalLifes, day, animal);
+						eventListener.notify(animal, new EmitMessage(Event.DIE, ""));
 					}
 					continue;
 				}
 				
-				eventListener.notify(null, new EmitMessage(Event.ANIMAL_CYCLE_STARTED, animal.getName()+" "+animal.getCurrentEnergy()+"/"+animal.getMaxEnergy()));
-				
 				Food toEat = getRandomFoodFromEnvironment();
 				Event eatingEvent = animal.feed(toEat);
+				
 				animalEventsToEmit.add(new EmitMessage(eatingEvent, toEat+""));
 				
 				if(day%3==0 && animal.isStarving()==null) {
@@ -66,15 +68,17 @@ public class SimulationLogic {
 					Event dietEvent = animal.addFoodToDiet(gen.generateRandomFood());
 					
 					animalEventsToEmit.add(new EmitMessage(growingEvent, animal.getSize()+""));
-					animalEventsToEmit.add(new EmitMessage(dietEvent, animal.getDiet().get(animal.getDiet().size())+""));
+					animalEventsToEmit.add(new EmitMessage(dietEvent, animal.getDiet().get(animal.getDiet().size()-1)+""));
 				}
 				
 				eventListener.notifyAll(animal, animalEventsToEmit);
+				animalEventsToEmit.clear();
 			}
 			
 			veggieRegrow();
 			day++;
 		}
+		
 		printStatistics(animalLifes);
 	}
 	
@@ -85,8 +89,9 @@ public class SimulationLogic {
 	
 	private void veggieRegrow() {
 		for(Food veggie:foods) {
-			if(veggie instanceof Plants)
-				veggie.setCurrentEnergy((int)gen.getRandom(veggie.getMaxEnergy())+1);
+			if(veggie instanceof Plants) {
+				veggie.changeEnergy(veggie.getCurrentEnergy() + (int)gen.getRandom(veggie.getMaxEnergy())+1);
+			}
 		}
 	}
 	
@@ -102,13 +107,6 @@ public class SimulationLogic {
 		System.out.println(">> Minimum lived for " + minLife +" days\n"+ animalLifes.get(minLife));
 		System.out.println(">> Maximum lived for " + maxLife +" days\n"+ animalLifes.get(maxLife));
 		System.out.println(">> Average living of " + average(animalLifes.keySet()) +" days");
-	}
-	
-	private boolean areAllAnimalsDeath() {
-		for(Food f:foods) {
-			if((f instanceof Animal) && f.isAlive()) return false;
-		}
-		return true;
 	}
 	
 	private int average(Set<Integer> nums) {

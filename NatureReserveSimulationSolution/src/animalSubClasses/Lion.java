@@ -1,9 +1,9 @@
-package AnimalSubClasses;
+package animalSubClasses;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import Animals.Carnivore;
+import animals.Carnivore;
 import food.FoodName;
 
 public final class Lion extends Carnivore {

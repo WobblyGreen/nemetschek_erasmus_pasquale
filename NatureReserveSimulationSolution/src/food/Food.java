@@ -1,36 +1,5 @@
 package food;
 
-<<<<<<< HEAD
-public abstract class Food {
-	protected double size;
-	protected int currentEnergy;
-	protected int maxEnergy;
-	protected FoodName name;
-	
-	
-	public Food(FoodName name, double size, int currentEnergy, int maxEnergy) {
-		this.currentEnergy = currentEnergy;
-		this.maxEnergy = maxEnergy;
-		this.name = name;
-	}
-
-
-	public double getSize() {
-		return size;
-	}
-
-
-	public int getCurrentEnergy() {
-		return currentEnergy;
-	}
-
-
-	public int getMaxEnergy() {
-		return maxEnergy;
-	}
-
-
-=======
 import events.Event;
 
 public abstract class Food {
@@ -48,18 +17,15 @@ public abstract class Food {
 		this.alive=true;
 	}
 
->>>>>>> 6b9ad2c (Fixed inheritance between Animal, Plants and Food)
 	public FoodName getName() {
 		return name;
 	}
-
-<<<<<<< HEAD
 
 	public void setCurrentEnergy(int currentEnergy) {
 		this.currentEnergy=currentEnergy;
 		
 	}
-=======
+
 	public double getSize() {
 		return size;
 	}
@@ -72,9 +38,6 @@ public abstract class Food {
 		return maxEnergy;
 	}
 	
-	public void setCurrentEnergy(int currentEnergy) {
-		this.currentEnergy=currentEnergy;
-	}
 	
 	public boolean isAlive() {
 		return alive;
@@ -84,7 +47,7 @@ public abstract class Food {
 		int energyLeft = 0;
 		currentEnergy+=receivedEnergy;
 		
-		if(currentEnergy<0) {
+		if(currentEnergy<=0) {
 			energyLeft=currentEnergy;
 			currentEnergy=0;
 			die();
@@ -102,9 +65,4 @@ public abstract class Food {
 		alive=false;
 		return Event.DIE;
 	}
-	
-	
-	
-	
->>>>>>> 6b9ad2c (Fixed inheritance between Animal, Plants and Food)
 }
