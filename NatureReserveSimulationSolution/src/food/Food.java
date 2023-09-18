@@ -3,13 +3,13 @@ package food;
 import events.Event;
 
 public abstract class Food {
-	protected FoodName name;
+	protected String name;
 	protected double size;
 	protected int currentEnergy;
 	protected int maxEnergy;
 	protected boolean alive;
 	
-	public Food(FoodName name, double size, int maxEnergy) {
+	public Food(String name, double size, int maxEnergy) {
 		this.name = name;
 		this.size = size;
 		this.currentEnergy = maxEnergy;
@@ -17,7 +17,7 @@ public abstract class Food {
 		this.alive=true;
 	}
 
-	public FoodName getName() {
+	public String getName() {
 		return name;
 	}
 

@@ -1,75 +1,61 @@
 package simulation;
 
 import java.util.ArrayList;
+
 import java.util.Arrays;
+import java.util.Iterator;
 
 import animalSubClasses.*;
 import animals.Animal;
+import animals.AnimalFactory;
 import food.Food;
-import food.FoodName;
+import nonAnimal.Plant;
+import nonAnimal.PlantFactory;
 import nonAnimalSubClasses.*;
 
 public class Generator {
+	private AnimalFactory animalFactory;
+	private PlantFactory plantFactory; 
 	
-	public Generator() {
+	public Generator(AnimalFactory animalFactory, PlantFactory plantsFactory) {
+		this.animalFactory=animalFactory;
+		this.plantFactory=plantsFactory;
 	};
 	
 	public double getRandom(int multiplier) {
 		return Math.random()*multiplier;
 	}
 	
-	public ArrayList<Animal> generateRandomAnimals(){
-		return new ArrayList<Animal>(Arrays.asList(new Lion(), new Zebra()));
+	public Animal generateRandomAnimal() {
+		String animalName=animalFactory.getAnimalKey((int)getRandom(animalFactory.getAnimalLength()));
+		return animalFactory.createAnimal(animalName);
 	}
 	
-	public ArrayList<Food> generateRandomFoods(){
-		ArrayList<Food> foods = new ArrayList<>();
+	public ArrayList<Animal> generateRandomAnimals(){
+		ArrayList<Animal> randomAnimals = new ArrayList<Animal>();
 		
-		/*int numOfGeneratedFoods = (int)getRandom(5)+1;
+		for (int i = 0; i < 3; i++) {
+			randomAnimals.add(generateRandomAnimal());
+		}
+		return randomAnimals;
+	}
+	
+	public Plant generateRandomPlant(){
+		String plantName=plantFactory.getPlantKey((int)getRandom(plantFactory.getPlantLength()));
+		return plantFactory.createPlant(plantName);
+	}
+	
+	public ArrayList<Plant> generateRandomPlants(){
+		ArrayList<Plant> randomPlants = new ArrayList<>();
 		
-		for(int i=0; i<numOfGeneratedFoods; i++) {
-			foods.add(generateRandomFood());
-		}*/
-		foods.add(new Cauliflower());
+		for (int i = 0; i < 2; i++) {
+			randomPlants.add(generateRandomPlant());
+		}
 		
-		return foods;
+		return randomPlants;
 	}
 	
 	public Food generateRandomFood() {
-		FoodName foodToGenerate = FoodName.values()[(int)getRandom(FoodName.values().length)];
-		Food generatedFood;
-		
-		switch(foodToGenerate) {
-		case LION:
-			generatedFood=generateLion();
-			break;
-		case ZEBRA:
-			generatedFood=generateZebra();
-			break;
-		case CAULIFLOWER:
-			generatedFood=generateCauliflower();
-			break;
-		case BANANA:
-			generatedFood=generateBanana();
-			break;
-		default:
-			generatedFood=null;
-		}
-		
-		return generatedFood;
+		return (Math.random()>0.5 ? generateRandomAnimal() : generateRandomPlant());
 	}
-	
-	private Lion generateLion() {
-		return new Lion();
-	}
-	private Zebra generateZebra() {
-		return new Zebra();
-	}
-	private Cauliflower generateCauliflower() {
-		return new Cauliflower();
-	}
-	private Banana generateBanana() {
-		return new Banana();
-	}
-	
 }

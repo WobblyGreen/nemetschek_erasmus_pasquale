@@ -1,6 +1,7 @@
 package simulation;
 
 import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
@@ -10,22 +11,26 @@ import events.EmitMessage;
 import events.Event;
 import events.EventListener;
 import food.Food;
-import food.FoodName;
-import nonAnimal.Plants;
+import nonAnimal.Plant;
 
 public class SimulationLogic {
 	ArrayList<Animal> animals;
+	ArrayList<Plant> plants;
 	ArrayList<Food> foods;
+	
 	Generator gen;
 	EventListener eventListener;
 	
 	public SimulationLogic(Generator gen, EventListener eventListener) {
 		this.gen=gen;
 		this.eventListener=eventListener;
-		this.animals=gen.generateRandomAnimals();
 		
-		this.foods=gen.generateRandomFoods();
-		this.foods.addAll(animals);
+		this.animals=gen.generateRandomAnimals();
+		this.plants=gen.generateRandomPlants();
+		
+		this.foods=new ArrayList<>();
+		foods.addAll(animals);
+		foods.addAll(plants);
 	}
 	
 	public void simulate() {
@@ -65,7 +70,7 @@ public class SimulationLogic {
 				
 				if(day%3==0 && animal.isStarving()==null) {
 					Event growingEvent = animal.grow();
-					Event dietEvent = animal.addFoodToDiet(gen.generateRandomFood());
+					Event dietEvent = animal.addFoodToDiet(getRandomFoodFromEnvironment());
 					
 					animalEventsToEmit.add(new EmitMessage(growingEvent, animal.getSize()+""));
 					animalEventsToEmit.add(new EmitMessage(dietEvent, animal.getDiet().get(animal.getDiet().size()-1)+""));
@@ -88,10 +93,8 @@ public class SimulationLogic {
 	
 	
 	private void veggieRegrow() {
-		for(Food veggie:foods) {
-			if(veggie instanceof Plants) {
-				veggie.changeEnergy(veggie.getCurrentEnergy() + (int)gen.getRandom(veggie.getMaxEnergy())+1);
-			}
+		for(Plant plant:plants) {
+			plant.changeEnergy(plant.getCurrentEnergy() + (int)gen.getRandom(plant.getMaxEnergy()-plant.getCurrentEnergy())+1);
 		}
 	}
 	

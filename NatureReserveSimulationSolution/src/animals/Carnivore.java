@@ -4,23 +4,22 @@ import java.util.ArrayList;
 
 import events.Event;
 import food.Food;
-import food.FoodName;
-import nonAnimal.Plants;
+import nonAnimal.Plant;
 
 public abstract class Carnivore extends Animal {
 	
-	public Carnivore(FoodName name, double size, int maxEnergy, ArrayList<FoodName> diet) {
+	public Carnivore(String name, double size, int maxEnergy, ArrayList<String> diet) {
 		super(name, size, maxEnergy, diet);
 	}
 
 	@Override
 	public Event addFoodToDiet(Food food) {
-		if(food instanceof Plants) return null;
+		if(food instanceof Plant) return null;
 		return super.addFoodToDiet(food);
 	}
 	
 	public Event feed(Food food) {
-		if(food instanceof Plants) {
+		if(food instanceof Plant) {
 			starve();
 			return Event.CANT_EAT;
 		}

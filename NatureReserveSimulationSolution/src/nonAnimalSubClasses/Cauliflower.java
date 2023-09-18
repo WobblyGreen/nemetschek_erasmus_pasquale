@@ -1,12 +1,11 @@
 package nonAnimalSubClasses;
 
-import food.FoodName;
-import nonAnimal.Plants;
+import nonAnimal.Plant;
 
-public final class Cauliflower extends Plants{
+public final class Cauliflower extends Plant{
 
 	public Cauliflower() {
-		super(FoodName.CAULIFLOWER, 0.5, 3);
+		super("cauliflower", 0.5, 3);
 	}
 
 }

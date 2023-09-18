@@ -2,23 +2,23 @@ package animals;
 
 import java.util.ArrayList;
 
+
 import events.Emitter;
 import events.Event;
 import food.Food;
-import food.FoodName;
 
 public abstract class Animal extends Food implements Emitter{
-	protected ArrayList<FoodName> diet;
+	protected ArrayList<String> diet;
 	protected int starvingValue;
 
-	public Animal(FoodName name, double size, int maxEnergy, ArrayList<FoodName> diet) {
+	public Animal(String name, double size, int maxEnergy, ArrayList<String> diet) {
 		super(name, size, maxEnergy);
 		this.starvingValue=maxEnergy/3;
 		this.diet=diet;
 	}
 	
-	public boolean dietContainsFood(FoodName food) {
-		for(FoodName foodName:diet) {
+	public boolean dietContainsFood(String food) {
+		for(String foodName:diet) {
 			if(foodName.equals(food)) return true;
 		}
 		return false;
@@ -62,8 +62,8 @@ public abstract class Animal extends Food implements Emitter{
 	}
 	
 	public boolean dietContainsFood(Food food) {
-		for(FoodName fn:diet) {
-			if(fn.equals(food.getName())) return true;
+		for(String f:diet) {
+			if(f.equals(food.getName())) return true;
 		}
 		return false;
 	}
@@ -72,7 +72,7 @@ public abstract class Animal extends Food implements Emitter{
 		return (currentEnergy<=starvingValue ? Event.STARVE : null);
 	}
 	
-	public ArrayList<FoodName> getDiet(){
+	public ArrayList<String> getDiet(){
 		return diet;
 	}
 

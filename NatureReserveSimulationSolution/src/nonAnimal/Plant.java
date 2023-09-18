@@ -1,11 +1,10 @@
 package nonAnimal;
 
 import food.Food;
-import food.FoodName;
 
-public class Plants extends Food{
+public class Plant extends Food{
 
-	public Plants(FoodName name, double size, int maxEnergy) {
+	public Plant(String name, double size, int maxEnergy) {
 		super(name, size, maxEnergy);
 	}
 	
