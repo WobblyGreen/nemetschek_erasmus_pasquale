@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import animals.*;
+import biomes.Biome;
 import events.EmitMessage;
 import events.Event;
 import events.EventListener;
@@ -14,88 +15,105 @@ import food.Food;
 import nonAnimal.Plant;
 
 public class SimulationLogic {
-	ArrayList<Animal> animals;
-	ArrayList<Plant> plants;
-	ArrayList<Food> foods;
+	private Generator gen;
+	private EventListener eventListener;
+	private Biome[][] world;
 	
-	Generator gen;
-	EventListener eventListener;
+	private int day;
+	private int totalAnimals;
+	private ArrayList<Animal> allAliveAnimals;
+	private HashMap<Integer, Animal> animalLifes;
+	private ArrayList<EmitMessage> animalEventsToEmit;
 	
-	public SimulationLogic(Generator gen, EventListener eventListener) {
+	public SimulationLogic(Biome[][] world, Generator gen, EventListener eventListener) {
 		this.gen=gen;
 		this.eventListener=eventListener;
+		this.world=world;
 		
-		this.animals=gen.generateRandomAnimals();
-		this.plants=gen.generateRandomPlants();
+		this.day=1;
+		this.allAliveAnimals=getAllAliveAnimals();
+		this.animalEventsToEmit=new ArrayList<>();
+		this.animalLifes = new HashMap<>();
+		this.totalAnimals=allAliveAnimals.size();
+	}
+	
+	private ArrayList<Animal> getAllAliveAnimals(){
+		ArrayList<Animal> animals = new ArrayList<>();
+		for(Biome[] biomeRow:world) {
+			for(Biome biome:biomeRow) {
+				animals.addAll(biome.getCurrentLivingAnimals());
+			}
+		}
 		
-		this.foods=new ArrayList<>();
-		foods.addAll(animals);
-		foods.addAll(plants);
+		return animals;
 	}
 	
 	public void simulate() {
 		System.out.println("Starting simulation.\n");
-		System.out.println("Environment in this simulation:\n"+foods);
+		printEnvironment();
 		startAllAnimalsLifeCycle();
 
 	}
 	
 	private void startAllAnimalsLifeCycle() {
-		HashMap<Integer, Animal> animalLifes = new HashMap<>();
-		ArrayList<Animal> diedAnimals = new ArrayList<>();
-		ArrayList<EmitMessage> animalEventsToEmit = new ArrayList<>();
-		
-		int day=1;
-		
-		while(animals.size()!=diedAnimals.size()) {
-			eventListener.notify(null, new EmitMessage(Event.SUMMARY, "DAY: "+day+" | ANIMALS ALIVE: "+(animals.size()-diedAnimals.size())+"/"+animals.size()+"\n"));
+		while(allAliveAnimals.size()>0) {
+			eventListener.notify(null, new EmitMessage(Event.SUMMARY, "DAY: "+day+" | ANIMALS ALIVE: "+allAliveAnimals.size()+"/"+totalAnimals+"\n"));
 			eventListener.notify(null, new EmitMessage(Event.NEW_DAY, day+""));
-			
-			for(Animal animal:animals) {
-				eventListener.notify(animal, new EmitMessage(Event.ANIMAL_CYCLE_STARTED, animal.getName()+" "+animal.getCurrentEnergy()+"/"+animal.getMaxEnergy()));
-				
-				if(!animal.isAlive()) {
-					if(!animalLifes.containsValue(animal)) {
-						diedAnimals.add(animal);
-						insertDeadAnimal(animalLifes, day, animal);
-						eventListener.notify(animal, new EmitMessage(Event.DIE, ""));
-					}
-					continue;
+			for(Biome[] biomeRow:world) {
+				for(Biome biome:biomeRow) {
+					eventListener.notify(null, new EmitMessage(Event.BIOME, biome.getName()));
+					animateAnimals(biome, biome.getCurrentLivingAnimals());
 				}
-				
-				Food toEat = getRandomFoodFromEnvironment();
-				Event eatingEvent = animal.feed(toEat);
-				
-				animalEventsToEmit.add(new EmitMessage(eatingEvent, toEat+""));
-				
-				if(day%3==0 && animal.isStarving()==null) {
-					Event growingEvent = animal.grow();
-					Event dietEvent = animal.addFoodToDiet(getRandomFoodFromEnvironment());
-					
-					animalEventsToEmit.add(new EmitMessage(growingEvent, animal.getSize()+""));
-					animalEventsToEmit.add(new EmitMessage(dietEvent, animal.getDiet().get(animal.getDiet().size()-1)+""));
-				}
-				
-				eventListener.notifyAll(animal, animalEventsToEmit);
-				animalEventsToEmit.clear();
 			}
-			
-			veggieRegrow();
+			regrowAllPlants();
 			day++;
 		}
 		
 		printStatistics(animalLifes);
 	}
 	
-	private Food getRandomFoodFromEnvironment() {
-		return foods.get((int)gen.getRandom(foods.size()));
+	
+	private void regrowAllPlants() {
+		for(Biome[] biomeRow:world) {
+			for(Biome biome:biomeRow) {
+				biome.regrowPlants();
+			}
+		}
 	}
 	
-	
-	private void veggieRegrow() {
-		for(Plant plant:plants) {
-			plant.changeEnergy(plant.getCurrentEnergy() + (int)gen.getRandom(plant.getMaxEnergy()-plant.getCurrentEnergy())+1);
+	private void animateAnimals(Biome biome, ArrayList<Animal> animals) {
+		for(Animal animal:animals) {
+			eventListener.notify(animal, new EmitMessage(Event.ANIMAL_CYCLE_STARTED, animal.getName()+" "+animal.getCurrentEnergy()+"/"+animal.getMaxEnergy()));
+			
+			if(!animal.isAlive()) {
+				if(!animalLifes.containsValue(animal)) {
+					allAliveAnimals.remove(animal);
+					insertDeadAnimal(animalLifes, day, animal);
+					eventListener.notify(animal, new EmitMessage(Event.DIE, ""));
+				}
+				continue;
+			}
+			
+			Food toEat = getRandomFoodFromEnvironment(biome);
+			Event eatingEvent = animal.feed(toEat);
+			
+			animalEventsToEmit.add(new EmitMessage(eatingEvent, toEat+""));
+			
+			if(day%3==0 && animal.isStarving()==null) {
+				Event growingEvent = animal.grow();
+				Event dietEvent = animal.addFoodToDiet(getRandomFoodFromEnvironment(biome));
+				
+				animalEventsToEmit.add(new EmitMessage(growingEvent, animal.getSize()+""));
+				animalEventsToEmit.add(new EmitMessage(dietEvent, animal.getDiet().get(animal.getDiet().size()-1)+""));
+			}
+			
+			eventListener.notifyAll(animal, animalEventsToEmit);
+			animalEventsToEmit.clear();
 		}
+	}
+	
+	private Food getRandomFoodFromEnvironment(Biome biome) {
+		return biome.getAllEatableItems().get((int)gen.getRandom(biome.getAllEatableItems().size()));
 	}
 	
 	private void insertDeadAnimal(HashMap<Integer, Animal> animalLifes, int day, Animal animal) {
@@ -116,6 +134,37 @@ public class SimulationLogic {
 		int sum = 0;
 		for(int n : nums) sum+=n;
 		return sum/nums.size();
+		
+	}
+	
+	private void printEnvironment() {
+		System.out.println("Map of the world:\n");
+		//printing the matrix
+		String spaceFromEdgeOfTheScreen = "    ";
+		System.out.print(spaceFromEdgeOfTheScreen+"  ");
+		for(int i=0; i<world[0].length; i++)
+			System.out.print(i+" ");
+		
+		System.out.println("");
+		
+		for(int i=0; i<world.length; i++) {
+			System.out.print(spaceFromEdgeOfTheScreen+i+" ");
+			for(int j=0; j<world[i].length; j++) {
+				System.out.print(world[i][j]+" ");
+			}
+			System.out.println("");
+		}
+		
+		System.out.println("");
+		//printing each biome
+		for(int i=0; i<world.length; i++) {
+			for(int j=0; j<world[i].length; j++) {
+				System.out.println("- "+world[i][j].displayEnvironment());
+			}
+		}
+		
+		System.out.println("");
+		
 		
 	}
 }

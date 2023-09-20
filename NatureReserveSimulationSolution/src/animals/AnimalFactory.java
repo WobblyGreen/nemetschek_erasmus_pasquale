@@ -1,5 +1,6 @@
 package animals;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
@@ -15,8 +16,19 @@ public class AnimalFactory {
 		return (animalSupplier==null ? null : animalSupplier.get());
 	}
 	
+	public ArrayList<Animal> createAnimals(int num){
+		ArrayList<Animal> createdAnimals = new ArrayList<>();
+		String[] animalsNames = availableAnimals.keySet().toArray(String[]::new);
+		
+		for(int i=0; i<num; i++) {
+			createdAnimals.add(createAnimal(animalsNames[(int)(Math.random()*animalsNames.length)]));
+		}
+		
+		return createdAnimals;
+	}
+	
 	public String getAnimalKey(int index) {
-		return (String) availableAnimals.keySet().toArray()[index];
+		return availableAnimals.keySet().toArray(String[]::new)[index];
 	}
 	
 	public int getAnimalLength() {

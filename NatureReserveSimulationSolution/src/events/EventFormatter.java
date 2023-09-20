@@ -45,7 +45,11 @@ public class EventFormatter {
 			break;
 		
 		case ANIMAL_CYCLE_STARTED:
-			formattedEvent="\n>>";
+			formattedEvent=">>";
+			break;
+			
+		case BIOME:
+			formattedEvent="\n|| ";
 			break;
 		}
 			

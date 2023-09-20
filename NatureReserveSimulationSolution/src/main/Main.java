@@ -2,6 +2,8 @@ package main;
 
 import animals.AnimalFactory;
 import animals.AnimalMap;
+import biomes.BiomeFactory;
+import biomes.BiomeMap;
 import events.EventFormatter;
 import log.Logger;
 import nonAnimal.PlantFactory;
@@ -16,9 +18,10 @@ public class Main {
 		
 		AnimalFactory animalFactory=new AnimalFactory((new AnimalMap()).getAnimalHashMap());
 		PlantFactory plantFactory = new PlantFactory((new PlantMap()).getPlantHashMap());
-		Generator gen = new Generator(animalFactory, plantFactory);
+		BiomeFactory biomeFactory = new BiomeFactory((new BiomeMap()).getBiomeHashMap());
+		Generator gen = new Generator(animalFactory, plantFactory, biomeFactory);
 		
-		SimulationLogic sl = new SimulationLogic(gen, eventLogger);
+		SimulationLogic sl = new SimulationLogic(gen.generateWorld(3, 3),gen, eventLogger);
 		sl.simulate();
 	}
 
