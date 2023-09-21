@@ -2,26 +2,27 @@ package animals;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 public class AnimalFactory {
-	private HashMap<String, Supplier<Animal>> availableAnimals;
+	private HashMap<String, BiFunction<Integer, Integer, Animal>> availableAnimals;
 	
-	public AnimalFactory(HashMap<String, Supplier<Animal>> availableAnimals) {
+	public AnimalFactory(HashMap<String, BiFunction<Integer, Integer, Animal>> availableAnimals) {
 		this.availableAnimals=availableAnimals;
 	}
 	
-	public Animal createAnimal(String animalName) {
-		Supplier<Animal> animalSupplier = availableAnimals.get(animalName);
-		return (animalSupplier==null ? null : animalSupplier.get());
+	public Animal createAnimal(String animalName, int x, int y) {
+		BiFunction<Integer, Integer, Animal> animalSupplier = availableAnimals.get(animalName);
+		return (animalSupplier==null ? null : animalSupplier.apply(x, y));
 	}
 	
-	public ArrayList<Animal> createAnimals(int num){
+	public ArrayList<Animal> createAnimals(int num, int x, int y){
 		ArrayList<Animal> createdAnimals = new ArrayList<>();
 		String[] animalsNames = availableAnimals.keySet().toArray(String[]::new);
 		
 		for(int i=0; i<num; i++) {
-			createdAnimals.add(createAnimal(animalsNames[(int)(Math.random()*animalsNames.length)]));
+			createdAnimals.add(createAnimal(animalsNames[(int)(Math.random()*animalsNames.length)], x, y));
 		}
 		
 		return createdAnimals;

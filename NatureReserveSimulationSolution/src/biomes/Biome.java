@@ -8,7 +8,8 @@ import nonAnimal.Plant;
 
 public abstract class Biome {
 	protected String name;
-	protected double maxSizeCapacity;
+	protected int maxCapacity;
+	protected int currentCapacity;
 	
 	protected ArrayList<String> supportedAnimals;
 	protected ArrayList<String> supportedPlants;
@@ -20,12 +21,15 @@ public abstract class Biome {
 	protected int x;
 	protected int y;
 
-	public Biome(String name, double maxSizeCapacity, ArrayList<String> supportedAnimals,
+	public Biome(String name, int maxCapacity, ArrayList<String> supportedAnimals,
 			ArrayList<String> supportedPlants, int x, int y) {
 		this.name = name;
-		this.maxSizeCapacity = maxSizeCapacity;
+		this.maxCapacity = maxCapacity;
+		this.currentCapacity=0;
+		
 		this.supportedAnimals = supportedAnimals;
 		this.supportedPlants = supportedPlants;
+		
 		this.x = x;
 		this.y = y;
 	}
@@ -37,16 +41,20 @@ public abstract class Biome {
 		allEatableItems=new ArrayList<Food>();
 		allEatableItems.addAll(currentLivingAnimals);
 		allEatableItems.addAll(currentLivingPlants);
+		
+		currentCapacity=currentLivingAnimals.size();
 	}
 	
 	public void addAnimal(Animal animal) {
 		this.currentLivingAnimals.add(animal);
 		this.allEatableItems.add(animal);
+		currentCapacity++;
 	}
 	
 	public void removeAnimal(Animal animal) {
 		this.currentLivingAnimals.remove(animal);
 		this.allEatableItems.remove(animal);
+		currentCapacity--;
 	}
 	
 	public void regrowPlants() {
@@ -66,9 +74,13 @@ public abstract class Biome {
 	public String getName() {
 		return name;
 	}
+	
+	public int getCurrentCapacity() {
+		return currentCapacity;
+	}
 
-	public double getMaxSizeCapacity() {
-		return maxSizeCapacity;
+	public int getMaxCapacity() {
+		return maxCapacity;
 	}
 
 	public ArrayList<Animal> getCurrentLivingAnimals() {

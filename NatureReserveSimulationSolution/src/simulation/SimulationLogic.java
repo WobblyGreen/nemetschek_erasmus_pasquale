@@ -61,8 +61,8 @@ public class SimulationLogic {
 			eventListener.notify(null, new EmitMessage(Event.NEW_DAY, day+""));
 			for(Biome[] biomeRow:world) {
 				for(Biome biome:biomeRow) {
-					eventListener.notify(null, new EmitMessage(Event.BIOME, biome.getName()));
-					animateAnimals(biome, biome.getCurrentLivingAnimals());
+					eventListener.notify(null, new EmitMessage(Event.BIOME, biome.getName()+"\n"+biome.getCurrentLivingPlants()));
+					animateAnimals(biome);
 				}
 			}
 			regrowAllPlants();
@@ -81,9 +81,11 @@ public class SimulationLogic {
 		}
 	}
 	
-	private void animateAnimals(Biome biome, ArrayList<Animal> animals) {
-		for(Animal animal:animals) {
-			eventListener.notify(animal, new EmitMessage(Event.ANIMAL_CYCLE_STARTED, animal.getName()+" "+animal.getCurrentEnergy()+"/"+animal.getMaxEnergy()));
+	private void animateAnimals(Biome biome) {
+		ArrayList<Animal> animals = biome.getCurrentLivingAnimals();
+		for(int i=animals.size()-1; i>=0; i--) {
+			Animal animal = animals.get(i);
+			eventListener.notify(animal, new EmitMessage(Event.ANIMAL_CYCLE_STARTED, animal+""));
 			
 			if(!animal.isAlive()) {
 				if(!animalLifes.containsValue(animal)) {
@@ -94,10 +96,7 @@ public class SimulationLogic {
 				continue;
 			}
 			
-			Food toEat = getRandomFoodFromEnvironment(biome);
-			Event eatingEvent = animal.feed(toEat);
-			
-			animalEventsToEmit.add(new EmitMessage(eatingEvent, toEat+""));
+			animalEventsToEmit.addAll(animal.onEachTurn(world, gen));
 			
 			if(day%3==0 && animal.isStarving()==null) {
 				Event growingEvent = animal.grow();
@@ -162,9 +161,6 @@ public class SimulationLogic {
 				System.out.println("- "+world[i][j].displayEnvironment());
 			}
 		}
-		
 		System.out.println("");
-		
-		
 	}
 }

@@ -30,37 +30,37 @@ public class Generator {
 		return Math.random()*multiplier;
 	}
 	
-	public Animal generateRandomAnimal(ArrayList<String> supportedAnimals) {
+	public Animal generateRandomAnimal(ArrayList<String> supportedAnimals, int x, int y) {
 		String animalName=supportedAnimals.get((int)getRandom(supportedAnimals.size()));
-		return animalFactory.createAnimal(animalName);
+		return animalFactory.createAnimal(animalName, x, y);
 	}
 	
-	public ArrayList<Animal> generateRandomAnimals(int num_of_animals_to_generate, ArrayList<String> supportedAnimals){
+	public ArrayList<Animal> generateRandomAnimals(int num_of_animals_to_generate, ArrayList<String> supportedAnimals, int x, int y){
 		ArrayList<Animal> randomAnimals = new ArrayList<Animal>();
 		
 		for (int i = 0; i < num_of_animals_to_generate; i++) {
-			randomAnimals.add(generateRandomAnimal(supportedAnimals));
+			randomAnimals.add(generateRandomAnimal(supportedAnimals, x, y));
 		}
 		return randomAnimals;
 	}
 	
-	public Plant generateRandomPlant(ArrayList<String> supportedPlants){
+	public Plant generateRandomPlant(ArrayList<String> supportedPlants, int x, int y){
 		String plantName=supportedPlants.get((int)getRandom(supportedPlants.size()));
-		return plantFactory.createPlant(plantName);
+		return plantFactory.createPlant(plantName, x, y);
 	}
 	
-	public ArrayList<Plant> generateRandomPlants(int num_of_plants_to_generate, ArrayList<String> supportedPlants){
+	public ArrayList<Plant> generateRandomPlants(int num_of_plants_to_generate, ArrayList<String> supportedPlants, int x, int y){
 		ArrayList<Plant> randomPlants = new ArrayList<>();
 		
 		for (int i = 0; i < num_of_plants_to_generate; i++) {
-			randomPlants.add(generateRandomPlant(supportedPlants));
+			randomPlants.add(generateRandomPlant(supportedPlants, x, y));
 		}
 		
 		return randomPlants;
 	}
 	
-	public Food generateRandomFood(ArrayList<String> supportedAnimals, ArrayList<String> supportedPlants) {
-		return (Math.random()>0.5 ? generateRandomAnimal(supportedAnimals) : generateRandomPlant(supportedPlants));
+	public Food generateRandomFood(ArrayList<String> supportedAnimals, ArrayList<String> supportedPlants, int x, int y) {
+		return (Math.random()>0.5 ? generateRandomAnimal(supportedAnimals, x, y) : generateRandomPlant(supportedPlants, x, y));
 	}
 	
 	public Biome generateRandomBiome(int x, int y) {
@@ -73,7 +73,10 @@ public class Generator {
 		for(int i=0; i<num_of_rows; i++) {
 			for(int j=0; j<num_of_cols; j++) {
 				Biome biome = generateRandomBiome(j, i);
-				biome.inhabitBiome(generateRandomAnimals(3, biome.getSupportedAnimals()), generateRandomPlants(2, biome.getSupportedPlants()));
+				ArrayList<Animal> animals = generateRandomAnimals((int)(biome.getMaxCapacity()*Math.random()), biome.getSupportedAnimals(), j, i);
+				ArrayList<Plant> plants = generateRandomPlants(animals.size()/2, biome.getSupportedPlants(), j, i);
+				
+				biome.inhabitBiome(animals, plants);
 				world[i][j]=biome;
 			}
 		}

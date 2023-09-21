@@ -8,13 +8,17 @@ public abstract class Food {
 	protected int currentEnergy;
 	protected int maxEnergy;
 	protected boolean alive;
+	protected int x;
+	protected int y;
 	
-	public Food(String name, double size, int maxEnergy) {
+	public Food(String name, double size, int maxEnergy, int x, int y) {
 		this.name = name;
 		this.size = size;
 		this.currentEnergy = maxEnergy;
 		this.maxEnergy = maxEnergy;
 		this.alive=true;
+		this.x=x;
+		this.y=y;
 	}
 
 	public String getName() {

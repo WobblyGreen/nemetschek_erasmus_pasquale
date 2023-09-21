@@ -51,6 +51,10 @@ public class EventFormatter {
 		case BIOME:
 			formattedEvent="\n|| ";
 			break;
+		
+		case MOVED:
+			formattedEvent="_moved ";
+			break;
 		}
 			
 		return formattedEvent+(e==Event.NEW_DAY ? "" : message.getMessage());

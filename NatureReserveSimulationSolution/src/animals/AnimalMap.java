@@ -1,25 +1,25 @@
 package animals;
 
 import java.util.HashMap;
-import java.util.function.Supplier;
+import java.util.function.BiFunction;
 
 import animalSubClasses.*;
 
 public final class AnimalMap {
-	private HashMap<String, Supplier<Animal>> animalHashMap;
+	private HashMap<String, BiFunction<Integer, Integer, Animal>> animalHashMap;
 	
 	public AnimalMap() {
-		animalHashMap = new HashMap<String, Supplier<Animal>>();
+		animalHashMap = new HashMap<String, BiFunction<Integer, Integer, Animal>>();
 		fillMapWithDefaults();
 	}
 	
 	private void fillMapWithDefaults() {
-		animalHashMap.put("lion", ()->new Lion());
-		animalHashMap.put("lev", ()->new Lion());
-		animalHashMap.put("zebra", ()->new Zebra());
+		animalHashMap.put("lion", (Integer x, Integer y)->new Lion(x, y));
+		animalHashMap.put("lev", (Integer x, Integer y)->new Lion(x, y));
+		animalHashMap.put("zebra", (Integer x, Integer y)->new Zebra(x, y));
 	}
 	
-	public HashMap<String, Supplier<Animal>> getAnimalHashMap(){
+	public HashMap<String, BiFunction<Integer, Integer, Animal>> getAnimalHashMap(){
 		return animalHashMap;
 	}
 }

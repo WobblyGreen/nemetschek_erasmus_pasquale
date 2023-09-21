@@ -14,7 +14,7 @@ import simulation.SimulationLogic;
 public class Main {
 
 	public static void main(String[] args) {
-		Logger eventLogger = new Logger(new EventFormatter(), false);
+		Logger eventLogger = new Logger(new EventFormatter(), true);
 		
 		AnimalFactory animalFactory=new AnimalFactory((new AnimalMap()).getAnimalHashMap());
 		PlantFactory plantFactory = new PlantFactory((new PlantMap()).getPlantHashMap());

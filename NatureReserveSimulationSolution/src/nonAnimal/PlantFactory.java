@@ -1,21 +1,18 @@
 package nonAnimal;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.Supplier;
-
-import animals.Animal;
+import java.util.function.BiFunction;
 
 public class PlantFactory {
-	HashMap<String, Supplier<Plant>> availablePlants;
+	HashMap<String, BiFunction<Integer, Integer, Plant>> availablePlants;
 	
-	public PlantFactory(HashMap<String, Supplier<Plant>> availablePlants) {
+	public PlantFactory(HashMap<String, BiFunction<Integer, Integer, Plant>> availablePlants) {
 		this.availablePlants=availablePlants;
 	}
 	
-	public Plant createPlant(String plantName) {
-		Supplier<Plant> plantSupplier = availablePlants.get(plantName);
-		return (plantSupplier==null ? null : plantSupplier.get());
+	public Plant createPlant(String plantName, int x, int y) {
+		BiFunction<Integer, Integer, Plant> plantSupplier = availablePlants.get(plantName);
+		return (plantSupplier==null ? null : plantSupplier.apply(x, y));
 	}
 	
 	/*public ArrayList<Plant> createPlants(int num){

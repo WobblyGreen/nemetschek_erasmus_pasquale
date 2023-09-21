@@ -3,7 +3,7 @@ package events;
 public enum Event {
 	GROW, EXPANDING_DIET, STARVE,
 	CANT_EAT, EAT_BAD_FOOD, EAT, DIE,
-	EAT_ITSELF,
+	EAT_ITSELF, MOVED,
 	
 	BIOME,
 	
