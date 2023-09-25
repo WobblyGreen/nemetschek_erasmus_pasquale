@@ -1,4 +1,4 @@
-package animalSubClasses;
+package animalFinalClasses.savannaAnimals;
 
 import java.util.ArrayList;
 import java.util.Arrays;

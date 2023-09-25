@@ -1,7 +1,6 @@
 package main;
 
-import animals.AnimalFactory;
-import animals.AnimalMap;
+import animalFinalClasses.*;
 import biomes.BiomeFactory;
 import biomes.BiomeMap;
 import events.EventFormatter;

@@ -1,9 +1,11 @@
-package animals;
+package animalFinalClasses;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
+
+import animals.Animal;
 
 public class AnimalFactory {
 	private HashMap<String, BiFunction<Integer, Integer, Animal>> availableAnimals;
