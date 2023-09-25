@@ -2,13 +2,15 @@ package simulation;
 
 import java.util.ArrayList;
 
-import animalFinalClasses.AnimalFactory;
-import animals.Animal;
-import biomes.Biome;
+import food.animals.Animal;
+import food.animals.AnimalFactory;
+
+import food.nonAnimals.Plant;
+import food.nonAnimals.PlantFactory;
+
 import biomes.BiomeFactory;
+import biomes.Biome;
 import food.Food;
-import nonAnimal.Plant;
-import nonAnimal.PlantFactory;
 
 public class Generator {
 	private AnimalFactory animalFactory;

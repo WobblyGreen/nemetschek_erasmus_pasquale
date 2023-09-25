@@ -2,17 +2,18 @@ package simulation;
 
 import java.util.ArrayList;
 
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
-import animals.*;
+import food.animals.Animal;
+import food.nonAnimals.Plant;
 import biomes.Biome;
-import events.EmitMessage;
-import events.Event;
-import events.EventListener;
+import events.*;
+
 import food.Food;
-import nonAnimal.Plant;
+
 
 public class SimulationLogic {
 	private Generator gen;

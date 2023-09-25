@@ -2,9 +2,10 @@ package biomes;
 
 import java.util.ArrayList;
 
-import animals.Animal;
+
+import food.animals.Animal;
 import food.Food;
-import nonAnimal.Plant;
+import food.nonAnimals.Plant;
 
 public abstract class Biome {
 	protected String name;

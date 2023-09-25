@@ -1,8 +1,8 @@
 package biomes;
 
 import java.util.HashMap;
+
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
 
 public class BiomeFactory {
 	private HashMap<String, BiFunction<Integer, Integer, Biome>> availableBiomes;

@@ -1,12 +1,17 @@
 package main;
 
-import animalFinalClasses.*;
+import food.animals.AnimalFactory;
+import food.animals.animalFinalClasses.AnimalMap;
+
+import food.nonAnimals.nonAnimalFinalClasses.PlantMap;
+import food.nonAnimals.PlantFactory;
+
 import biomes.BiomeFactory;
-import biomes.BiomeMap;
+import biomes.biomeFinalClasses.BiomeMap;
+
 import events.EventFormatter;
 import log.Logger;
-import nonAnimal.PlantFactory;
-import nonAnimal.PlantMap;
+
 import simulation.Generator;
 import simulation.SimulationLogic;
 
