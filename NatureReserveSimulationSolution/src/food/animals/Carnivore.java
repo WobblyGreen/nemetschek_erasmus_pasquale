@@ -20,14 +20,6 @@ public abstract class Carnivore extends Animal {
 	}
 	
 	public Event feed(Food food) {
-		if(food instanceof Plant) {
-			starve();
-			return Event.CANT_EAT;
-		}
-		if(food==this) {
-			starve();
-			return Event.EAT_ITSELF;
-		}
 		food.die();
 		return super.feed(food);
 	}

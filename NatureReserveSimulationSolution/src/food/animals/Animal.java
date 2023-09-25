@@ -64,6 +64,11 @@ public abstract class Animal extends Food implements Emitter{
 			return Event.CANT_EAT;
 		}
 		
+		if(food==this) {
+			starve();
+			return Event.EAT_ITSELF;
+		}
+		
 		Event event=null;
 		if(!dietContainsFood(food)) {
 			starve();

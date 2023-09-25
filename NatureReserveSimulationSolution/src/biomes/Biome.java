@@ -2,7 +2,6 @@ package biomes;
 
 import java.util.ArrayList;
 
-
 import food.animals.Animal;
 import food.Food;
 import food.nonAnimals.Plant;
@@ -60,6 +59,7 @@ public abstract class Biome {
 	
 	public void regrowPlants() {
 		for(Plant plant:currentLivingPlants) {
+			if(plant==null) continue;
 			plant.changeEnergy(plant.getCurrentEnergy() + (int)(Math.random()*(plant.getMaxEnergy()-plant.getCurrentEnergy())+1));
 		}
 	}

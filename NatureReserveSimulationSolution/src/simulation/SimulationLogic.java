@@ -2,7 +2,6 @@ package simulation;
 
 import java.util.ArrayList;
 
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
@@ -25,6 +24,7 @@ public class SimulationLogic {
 	private ArrayList<Animal> allAliveAnimals;
 	private HashMap<Integer, Animal> animalLifes;
 	private ArrayList<EmitMessage> animalEventsToEmit;
+	private ArrayList<Animal> animalsThatAlreadyPlayed;
 	
 	public SimulationLogic(Biome[][] world, Generator gen, EventListener eventListener) {
 		this.gen=gen;
@@ -36,6 +36,7 @@ public class SimulationLogic {
 		this.animalEventsToEmit=new ArrayList<>();
 		this.animalLifes = new HashMap<>();
 		this.totalAnimals=allAliveAnimals.size();
+		this.animalsThatAlreadyPlayed=new ArrayList<>();
 	}
 	
 	private ArrayList<Animal> getAllAliveAnimals(){
@@ -67,6 +68,7 @@ public class SimulationLogic {
 				}
 			}
 			regrowAllPlants();
+			animalsThatAlreadyPlayed.clear();
 			day++;
 		}
 		
@@ -84,8 +86,11 @@ public class SimulationLogic {
 	
 	private void animateAnimals(Biome biome) {
 		ArrayList<Animal> animals = biome.getCurrentLivingAnimals();
+		
 		for(int i=animals.size()-1; i>=0; i--) {
 			Animal animal = animals.get(i);
+			if(animalsThatAlreadyPlayed.contains(animal)) continue;
+			
 			eventListener.notify(animal, new EmitMessage(Event.ANIMAL_CYCLE_STARTED, animal+""));
 			
 			if(!animal.isAlive()) {
@@ -110,6 +115,8 @@ public class SimulationLogic {
 			eventListener.notifyAll(animal, animalEventsToEmit);
 			animalEventsToEmit.clear();
 		}
+		
+		animalsThatAlreadyPlayed.addAll(animals);
 	}
 	
 	private Food getRandomFoodFromEnvironment(Biome biome) {

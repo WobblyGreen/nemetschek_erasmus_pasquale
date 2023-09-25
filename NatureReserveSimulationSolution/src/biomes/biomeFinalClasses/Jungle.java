@@ -9,9 +9,9 @@ public final class Jungle extends Biome {
 
 	public Jungle(int x, int y) {
 		super("Jungle",
-				8,
-				new ArrayList<String>(Arrays.asList("lion", "zebra")),
-				new ArrayList<String>(Arrays.asList("banana", "cauliflower")),
+				4,
+				new ArrayList<String>(Arrays.asList("lion", "anaconda", "bongo", "bonobo", "gorilla", "fish", "insect", "rat", "bird")),
+				new ArrayList<String>(Arrays.asList("banana", "grass", "leaf", "seed", "root", "bark")),
 				x, y);
 	}
 	

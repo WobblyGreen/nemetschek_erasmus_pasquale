@@ -9,9 +9,9 @@ public final class Savanna extends Biome {
 
 	public Savanna(int x, int y) {
 		super("Savanna",
-				6,
-				new ArrayList<String>(Arrays.asList("lion", "zebra")),
-				new ArrayList<String>(Arrays.asList("banana", "cauliflower")),
+				4,
+				new ArrayList<String>(Arrays.asList("lion", "zebra", "warthog", "elephant", "insect", "rat", "bird")),
+				new ArrayList<String>(Arrays.asList("banana", "cauliflower", "seed", "bark", "root", "potato")),
 				x, y);
 	}
 	

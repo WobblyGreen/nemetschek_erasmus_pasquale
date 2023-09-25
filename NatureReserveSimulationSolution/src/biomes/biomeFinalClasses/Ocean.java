@@ -9,9 +9,9 @@ public final class Ocean extends Biome {
 
 	public Ocean(int x, int y) {
 		super("Ocean",
-				10,
-				new ArrayList<String>(Arrays.asList("lion", "zebra")),
-				new ArrayList<String>(Arrays.asList("banana", "cauliflower")),
+				4,
+				new ArrayList<String>(Arrays.asList("bird", "dolphin", "shark", "whale", "fish", "jellyfish", "shrimp", "turtle")),
+				new ArrayList<String>(Arrays.asList("algae")),
 				x, y);
 	}
 	

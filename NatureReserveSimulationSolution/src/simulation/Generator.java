@@ -71,7 +71,7 @@ public class Generator {
 			for(int j=0; j<num_of_cols; j++) {
 				Biome biome = generateRandomBiome(j, i);
 				ArrayList<Animal> animals = generateRandomAnimals((int)(biome.getMaxCapacity()*Math.random()), biome.getSupportedAnimals(), j, i);
-				ArrayList<Plant> plants = generateRandomPlants(animals.size()/2, biome.getSupportedPlants(), j, i);
+				ArrayList<Plant> plants = generateRandomPlants((int)(biome.getMaxCapacity()*Math.random()), biome.getSupportedPlants(), j, i);
 				
 				biome.inhabitBiome(animals, plants);
 				world[i][j]=biome;
