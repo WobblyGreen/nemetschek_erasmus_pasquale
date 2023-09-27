@@ -42,4 +42,8 @@ public class Logger implements EventListener{
 		}
 		
 	}
+	
+	public void setSummary(boolean summary) {
+		this.summary=summary;
+	}
 }

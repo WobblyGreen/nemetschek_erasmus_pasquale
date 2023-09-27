@@ -36,7 +36,7 @@ public abstract class Animal extends Food implements Emitter{
 		
 		Food food = world[y][x].getAllEatableItems().get((int)(Math.random()*world[y][x].getAllEatableItems().size()));
 		Event feedEvent = this.feed(food);
-		events.add(new EmitMessage(feedEvent, food+""));
+		events.add(new EmitMessage(feedEvent, food+""+(events.isEmpty()?"":" in "+world[y][x].displayNameAndCoordinate())));
 		
 		return events;
 	}

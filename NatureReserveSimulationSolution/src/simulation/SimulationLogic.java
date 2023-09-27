@@ -131,8 +131,8 @@ public class SimulationLogic {
 		int maxLife = Collections.max(animalLifes.keySet());
 		
 		System.out.println("\nStatistic>>");
-		System.out.println(">> Minimum lived for " + minLife +" days\n"+ animalLifes.get(minLife));
-		System.out.println(">> Maximum lived for " + maxLife +" days\n"+ animalLifes.get(maxLife));
+		System.out.println(">> Minimum lived for " + minLife +" days: "+ animalLifes.get(minLife));
+		System.out.println(">> Maximum lived for " + maxLife +" days: "+ animalLifes.get(maxLife));
 		System.out.println(">> Average living of " + average(animalLifes.keySet()) +" days");
 	}
 	
