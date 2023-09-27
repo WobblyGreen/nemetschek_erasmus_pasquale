@@ -8,6 +8,7 @@ public abstract class Food {
 	protected int currentEnergy;
 	protected int maxEnergy;
 	protected boolean alive;
+
 	protected int x;
 	protected int y;
 	
@@ -27,7 +28,6 @@ public abstract class Food {
 
 	public void setCurrentEnergy(int currentEnergy) {
 		this.currentEnergy=currentEnergy;
-		
 	}
 
 	public double getSize() {
@@ -41,7 +41,6 @@ public abstract class Food {
 	public int getMaxEnergy() {
 		return maxEnergy;
 	}
-	
 	
 	public boolean isAlive() {
 		return alive;
@@ -70,3 +69,4 @@ public abstract class Food {
 		return Event.DIE;
 	}
 }
+
