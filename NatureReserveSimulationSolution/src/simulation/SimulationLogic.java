@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Set;
 
 import food.animals.Animal;
-import food.nonAnimals.Plant;
 import biomes.Biome;
 import events.*;
 

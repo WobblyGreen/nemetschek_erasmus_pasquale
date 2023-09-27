@@ -29,9 +29,8 @@ public abstract class Animal extends Food implements Emitter{
 		try {
 			Biome target = world[random_row][random_col];
 			if(canMoveTo(target)) {
-				events.add(new EmitMessage(Event.MOVED, "from "+world[y][x].getName()+" to "+target.getName()));
-				world[y][x].removeAnimal(this);
-				move(target);
+				events.add(new EmitMessage(Event.MOVED, "from "+world[y][x].displayNameAndCoordinate()+" to "+target.displayNameAndCoordinate()));
+				move(world[this.y][this.x], target);
 			}
 		} catch(Exception e) {};
 		
@@ -46,7 +45,8 @@ public abstract class Animal extends Food implements Emitter{
 		return biome.getSupportedAnimals().contains(this.name) && biome.getCurrentCapacity()<biome.getMaxCapacity();
 	}
 	
-	private void move(Biome toMoveBiome) {
+	private void move(Biome fromBiome, Biome toMoveBiome) {
+		fromBiome.removeAnimal(this);
 		toMoveBiome.addAnimal(this);
 		this.x=toMoveBiome.getX();
 		this.y=toMoveBiome.getY();
@@ -118,7 +118,7 @@ public abstract class Animal extends Food implements Emitter{
 
 	@Override
 	public String toString() {
-		return this.name+" "+ this.currentEnergy + "/" + this.maxEnergy + (isAlive()?" alive" : " dead");
+		return (isAlive()?"\u001B[32m" : "\u001B[31m") + this.name+" "+ this.currentEnergy + "/" + this.maxEnergy + "\u001B[0m";
 	}
 	
 	public String getAllInfos() {

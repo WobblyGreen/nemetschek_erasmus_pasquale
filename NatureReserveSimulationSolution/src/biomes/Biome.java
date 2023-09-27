@@ -108,6 +108,10 @@ public abstract class Biome {
 	public String toString() {
 		return name.charAt(0)+"";
 	}
+	
+	public String displayNameAndCoordinate() {
+		return name+"("+x+";"+y+")";
+	}
 
 	public String displayEnvironment() {
 		return "("+x+";"+y+") "+name+" -> Animals:"+currentLivingAnimals+" <|> Plants:"+currentLivingPlants;
