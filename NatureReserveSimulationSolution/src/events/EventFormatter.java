@@ -12,7 +12,7 @@ public class EventFormatter {
 		
 		switch(e) {
 		case NEW_DAY:
-			formattedEvent="\n---------- Day "+message.getMessage()+" ----------";
+			formattedEvent="\n---------- Day "+message.getMessage().split("BREAK")[0]+" ----------"+message.getMessage().split("BREAK")[1];
 			break;
 			
 		case ANIMAL_CYCLE_STARTED:

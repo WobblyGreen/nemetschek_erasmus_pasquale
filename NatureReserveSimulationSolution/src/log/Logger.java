@@ -22,6 +22,7 @@ public class Logger implements EventListener{
 		if(summary) {
 			if(e!=Event.SUMMARY) return;
 			toConsole = eventFormatter.formatEvent(e, message);
+			toConsole=toConsole.stripLeading();
 		}
 		
 		else {

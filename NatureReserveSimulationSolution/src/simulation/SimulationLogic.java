@@ -59,7 +59,7 @@ public class SimulationLogic {
 	private void startAllAnimalsLifeCycle() {
 		while(allAliveAnimals.size()>0) {
 			eventListener.notify(null, new EmitMessage(Event.SUMMARY, "DAY: "+day+" | ANIMALS ALIVE: "+allAliveAnimals.size()+"/"+totalAnimals+"\n"));
-			eventListener.notify(null, new EmitMessage(Event.NEW_DAY, day+""));
+			eventListener.notify(null, new EmitMessage(Event.NEW_DAY, day+"BREAK\n"+"ANIMALS ALIVE: "+allAliveAnimals.size()+"/"+totalAnimals+"\n"+getMapOnConsole()));
 			for(Biome[] biomeRow:world) {
 				for(Biome biome:biomeRow) {
 					eventListener.notify(null, new EmitMessage(Event.BIOME, biome.getName()+"\n"+biome.getCurrentLivingPlants()));
@@ -146,21 +146,7 @@ public class SimulationLogic {
 	private void printEnvironment() {
 		System.out.println("Map of the world:\n");
 		//printing the matrix
-		String spaceFromEdgeOfTheScreen = "    ";
-		System.out.print(spaceFromEdgeOfTheScreen+"  ");
-		for(int i=0; i<world[0].length; i++)
-			System.out.print(i+" ");
-		
-		System.out.println("");
-		
-		for(int i=0; i<world.length; i++) {
-			System.out.print(spaceFromEdgeOfTheScreen+i+" ");
-			for(int j=0; j<world[i].length; j++) {
-				System.out.print(world[i][j]+" ");
-			}
-			System.out.println("");
-		}
-		
+		System.out.print(getMapOnConsole());
 		System.out.println("");
 		//printing each biome
 		for(int i=0; i<world.length; i++) {
@@ -169,5 +155,25 @@ public class SimulationLogic {
 			}
 		}
 		System.out.println("");
+	}
+	
+	private String getMapOnConsole() {
+		String spaceFromEdgeOfTheScreen = "    ";
+		String map = spaceFromEdgeOfTheScreen+"  ";
+		
+		for(int i=0; i<world[0].length; i++)
+			map+=i+" ";
+		
+		map+="\n";
+		
+		for(int i=0; i<world.length; i++) {
+			map+=spaceFromEdgeOfTheScreen+i+" ";
+			for(int j=0; j<world[i].length; j++) {
+				map+=world[i][j]+" ";
+			}
+			map+="\n";
+		}
+		
+		return map;
 	}
 }
