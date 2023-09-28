@@ -11,5 +11,5 @@ The simulation ends once all animals die.
 - **Life Cycle**: Animals can die of hunger if they don't find food or can be eaten by other animals.
 
 ## Bugs
--**Infinite Simulation**: It may happen that an animal stays alive forever if gets its food frequently
--**Index out of bound**: Sometimes the simulation stops with index out bound exception, but it rarely happens
+- **Infinite Simulation**: It may happen that an animal stays alive forever if gets its food frequently.
+- **Index out of bound**: Sometimes the simulation stops with index out bound exception, but it rarely happens.
